@@ -1,0 +1,16 @@
+{
+    "presets": [
+      "next/babel"
+    ],
+    "plugins": [
+      ["module-resolver", {
+        "root": ["./src"],
+        "alias": {
+          "@styles": "./src/styles"
+        }
+      }],
+      ["styled-components"], 
+      ["@babel/plugin-syntax-top-level-await"],
+      ["macros"]
+    ]
+  }

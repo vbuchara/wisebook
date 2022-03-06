@@ -8,5 +8,6 @@ export const colors = {
 
     black: '#000',
     white: '#fff',
-    gray_500: '#333',
+    gray_400: '#818181',
+    gray_600: '#333',
 } as const;

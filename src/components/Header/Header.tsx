@@ -9,22 +9,23 @@ import {
     GoogleIcon 
 } from "./styles";
 
-import { firebaseApp } from "config/FirebaseConfig";
-
 export function Header(){
-    const auth = getAuth(firebaseApp);
+    const auth = getAuth();
     const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
 
     async function handleLoginButton() {
         await signInWithGoogle();
     }
 
-    if(user || error && !loading) {
+    if(user || error) {
         console.log(user ? user : error);
     }
 
     return (
         <HeaderStyle>
+            <h1>
+                Logo
+            </h1>
             <LoginButton
                 onClick={handleLoginButton}
             >

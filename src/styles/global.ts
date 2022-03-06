@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { colors } from "./colors";
 
 export const GlobalStyles = createGlobalStyle`
     * {
@@ -9,8 +10,18 @@ export const GlobalStyles = createGlobalStyle`
         font-size: 100%;
     }
     
+    html {
+        height: 100%;
+    }
+
     body {
         font-family: 'Ubuntu', sans-serif;
+        height: 100%;
+        background-color: ${colors.purple_200};
+
+        #__next{
+            height: 100%;
+        }
     }
 
     button {
