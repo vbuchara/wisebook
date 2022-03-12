@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { firebaseApp } from "../../src/config/FirebaseConfig";
+import { firebaseApp } from "../../config/FirebaseConfig";
 
 import { ErrorJSON, ErrorTypes } from "@api-types";
 

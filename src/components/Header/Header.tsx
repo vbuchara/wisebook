@@ -6,7 +6,7 @@ import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { 
     HeaderStyle, 
     LoginButton,
-    GoogleIcon 
+    FontAweIcon 
 } from "./styles";
 
 export function Header(){
@@ -29,7 +29,7 @@ export function Header(){
             <LoginButton
                 onClick={handleLoginButton}
             >
-                <GoogleIcon      
+                <FontAweIcon      
                     icon={brands('google')}
                 />
                 <h1>Login com Google</h1>

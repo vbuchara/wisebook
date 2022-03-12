@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { colors } from "../../styles/colors";
+import { colors } from "@styles/colors";
 
 const vars = {
-    loginButton: colors.white,
-    loginText: colors.gray_400,
+    loginButton: colors.red,
+    loginText: colors.white,
 } as const;
 
 export const HeaderStyle = styled.header`
@@ -18,7 +18,7 @@ export const HeaderStyle = styled.header`
     padding-right: 5%;
 
     h1 {
-        color: red;
+        color: ${colors.purple_800};
     }
 `;
 
@@ -40,7 +40,7 @@ export const LoginButton = styled.button`
     }
 `;
 
-export const GoogleIcon = styled(FontAwesomeIcon)`
+export const FontAweIcon = styled(FontAwesomeIcon)`
     height: clamp(1rem, 1.8vw, 3rem);
 
     path {

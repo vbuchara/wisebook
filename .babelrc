@@ -6,7 +6,8 @@
       ["module-resolver", {
         "root": ["./src"],
         "alias": {
-          "@styles": "./src/styles"
+          "@styles": "./src/styles",
+          "@components": "./src/components"
         }
       }],
       ["styled-components"], 
