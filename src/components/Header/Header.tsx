@@ -1,24 +1,22 @@
 import React, { useEffect } from "react";
-import { brands } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { getAuth } from "firebase/auth";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 
 import { 
-    HeaderStyle, 
-    LoginButton,
-    FontAweIcon 
+    HeaderStyle,  
 } from "./styles";
+import { LoginButton } from "components/LoginButton";
 
 export function Header(){
     const auth = getAuth();
-    const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+    const [signInWithGoogle, authResponse, loading, errorResponse] = useSignInWithGoogle(auth);
 
     async function handleLoginButton() {
         await signInWithGoogle();
     }
 
-    if(user || error) {
-        console.log(user ? user : error);
+    if(authResponse || errorResponse) {
+
     }
 
     return (
@@ -26,14 +24,10 @@ export function Header(){
             <h1>
                 Logo
             </h1>
-            <LoginButton
-                onClick={handleLoginButton}
-            >
-                <FontAweIcon      
-                    icon={brands('google')}
-                />
-                <h1>Login com Google</h1>
-            </LoginButton>
+            <LoginButton 
+                handleLoginButton={handleLoginButton} 
+                loading={loading}
+            /> 
         </HeaderStyle>
     );
 }

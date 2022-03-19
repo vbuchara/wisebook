@@ -1,7 +1,10 @@
 import { createGlobalStyle } from "styled-components";
+import { animations } from "./animations";
 import { colors } from "./colors";
 
 export const GlobalStyles = createGlobalStyle`
+    ${animations};
+
     * {
         margin: 0;
         padding: 0;
