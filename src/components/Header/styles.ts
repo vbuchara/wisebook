@@ -12,7 +12,7 @@ export const HeaderStyle = styled.header`
     padding: 0.5rem;
     padding-right: 5%;
 
-    h1 {
+    & > h1 {
         color: ${colors.purple_800};
     }
 `;

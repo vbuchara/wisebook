@@ -1,14 +1,18 @@
 import React, { useEffect } from "react";
 import { getAuth } from "firebase/auth";
+import { getDatabase, ref, runTransaction } from 'firebase/database';
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+
+import { firebaseApp } from 'config/FirebaseConfig';
+
+import { LoginButton } from "components/LoginButton";
 
 import { 
     HeaderStyle,  
 } from "./styles";
-import { LoginButton } from "components/LoginButton";
 
 export function Header(){
-    const auth = getAuth();
+    const auth = getAuth(firebaseApp);
     const [signInWithGoogle, authResponse, loading, errorResponse] = useSignInWithGoogle(auth);
 
     async function handleLoginButton() {
