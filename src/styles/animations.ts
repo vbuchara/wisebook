@@ -9,4 +9,14 @@ export const animations = css`
             transform: rotate(360deg);
         }
     }
+
+    @keyframes fade {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0.5;
+        }
+    }
 `; 

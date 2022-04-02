@@ -7,12 +7,13 @@ export const HeaderStyle = styled.header`
     align-items: center;
     justify-content: space-between;
 
-    background-color: ${colors.purple_600};
+    background-color: ${colors.purple_500};
 
     padding: 0.5rem;
     padding-right: 5%;
 
     & > h1 {
+        font-size: clamp(0.8rem, 1.5vw, 2.8rem);
         color: ${colors.purple_800};
     }
 `;

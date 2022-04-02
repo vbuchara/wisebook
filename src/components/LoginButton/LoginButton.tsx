@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { brands } from '@fortawesome/fontawesome-svg-core/import.macro';
 
 import { FontAweIcon, LoginButtonStyle } from './styles';
-import { LoadingSpinner } from 'components/LoadingSpinner';
+import { LoadingComponent } from 'components/LoadingComponent';
 
 type LoginButtonProps = {
     handleLoginButton: () => void,
@@ -15,7 +15,7 @@ export function LoginButton({ handleLoginButton, loading }: LoginButtonProps) {
             onClick={handleLoginButton}
             isLoading={loading}
         >
-            <LoadingSpinner 
+            <LoadingComponent 
                 animating
                 className='loading-spinner'
             />
@@ -23,7 +23,7 @@ export function LoginButton({ handleLoginButton, loading }: LoginButtonProps) {
                 icon={brands('google')}
                 className='google-logo'
             />
-            <h1>Login com Google</h1>
+            <h1>Login <span>com Google</span></h1>
         </LoginButtonStyle>
     )
 }

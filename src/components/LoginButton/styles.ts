@@ -24,13 +24,16 @@ export const LoginButtonStyle = styled.button<LoginButtonStyleProps>`
     background-color: ${vars.loginButton};
     
     h1 {
-        font-size: clamp(1rem, 1.8vw, 3rem);
+        font-size: clamp(0.8rem, 1.5vw, 2.8rem);
         color: ${vars.loginText};
     }
 
     .loading-spinner {
-        height: clamp(1rem, 1.8vw, 3rem);
         position: absolute;
+
+        & > svg {
+            height: clamp(0.5rem, 0.6vw, 2.5rem);
+        }
     }
 
     ${({ isLoading }) => {
@@ -57,12 +60,9 @@ export const LoginButtonStyle = styled.button<LoginButtonStyleProps>`
     @media(max-width: 650px) {
         overflow: hidden;
         
-        h1 {
-            max-width: 2.8rem;
-
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: clip;
+        h1 > span {
+            display: none;
+            visibility: hidden;
         }
     }
 `;
