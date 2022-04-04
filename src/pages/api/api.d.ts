@@ -1,10 +1,34 @@
 declare module "@api-types" {
-    export enum ErrorTypes {
-        WRONG_REQUEST_TYPE = 'Tipo Errado de Requisição',
+    export type ErrorJSON = {
+        error: import('../../config/enums/ErrorTypesEnum').ErrorTypes,
+        message: any,
     }
 
-    export type ErrorJSON = {
-        error: ErrorTypes,
-        message: string,
+    import { CadernoDataResponse, CadernoQueryParams, CadernoDataSnapshots } from '@api-types/caderno';
+    
+    export { 
+        CadernoDataResponse, CadernoQueryParams, CadernoDataSnapshots
+    };
+}
+
+declare module "@api-types/caderno" {
+    import { CadernoModel } from '@database-model';
+
+    export namespace CadernoQueryParams {
+        type First = {
+            id: string,
+        }
+    }
+
+    export namespace CadernoDataResponse {
+        type First = {
+            cadernoId: string,
+        } & CadernoModel
+    }
+
+    export namespace CadernoDataSnapshots {
+        type First = {
+            [key: string]: CadernoModel
+        }
     }
 }

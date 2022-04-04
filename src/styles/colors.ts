@@ -5,6 +5,12 @@ export const colors = {
     purple_400: '#926bc0',
     purple_200: '#ca97cd',
 
+    purple_gradient: `linear-gradient(
+        90deg, rgba(21,4,91,1) 0%, 
+        rgba(58,40,142,1) 50%, 
+        rgba(146,107,192,1) 100%
+    )`,
+
     red: '#EA4335',
 
     black: '#000',

@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import type * as Admin from 'firebase-admin';
 
-import { DatabaseModelsEnum, UsuarioPrivilegiosEnum } from "../../src/config/DatabaseEnums";
+import { DatabaseModelsEnum, UsuarioPrivilegiosEnum } from "../../src/config/enums/DatabaseEnums";
 import { DefaultCaderno, DefaultPagina } from "../../src/config/DefaultEntitiesConfig";
 
 import type { WisebookDatabase } from './database';

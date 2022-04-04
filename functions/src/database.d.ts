@@ -6,7 +6,9 @@ export interface WisebookDatabase extends Database {
     ref<ModelType extends DatabaseModelsAtributes>(path: string): WisebookReference<ModelType>;
 }
 
-export interface WisebookReference<ValueType extends DatabaseModelsAtributes> extends Reference {
+export interface WisebookReference<
+    ValueType extends DatabaseModelsAtributes
+> extends Reference {
     set(value: ValueType, onComplete?: (a: Error | null) => any): Promise<any>;
     transaction(
         transactionUpdate: (a: ValueType | null) => ValueType | undefined | null,
@@ -17,6 +19,7 @@ export interface WisebookReference<ValueType extends DatabaseModelsAtributes> ex
         value?: ValueType, 
         onComplete?: (a: Error | null) => any
     ): WisebookThenableReference<ValueType>;
+    get<GetValType = any>(): Promise<WisebookDataSnapshot<GetValType>>;
 }
 
 export interface WisebookThenableReference<ValueTypeRef extends DatabaseModelsAtributes> extends ThenableReference {
@@ -40,3 +43,7 @@ export interface WisebookThenableReference<ValueTypeRef extends DatabaseModelsAt
         path: string
     ): WisebookReference<ValueType>;
 }
+
+export type WisebookDataSnapshot<ValType = any> = Omit<DataSnapshot, 'val'> & {
+    val(): ValType | null
+};

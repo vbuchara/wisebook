@@ -10,7 +10,7 @@ declare module "@database-model" {
             [key: string]: NotaModel,
         }[],
         ativo: boolean,
-        privilegios: import('./DatabaseEnums').UsuarioPrivilegiosEnum
+        privilegios: import('./enums/DatabaseEnums').UsuarioPrivilegiosEnum
     }
 
     export interface CadernoModel {
