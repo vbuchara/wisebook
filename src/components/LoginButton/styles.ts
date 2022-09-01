@@ -18,9 +18,10 @@ export const LoginButtonStyle = styled.button<LoginButtonStyleProps>`
     justify-content: center;
     gap: 0.6rem;
 
-    padding: clamp(0.6rem, 1vh, 2.6rem) clamp(1rem, 1vw, 3rem);
+    /* padding: clamp(0.6rem, 1vh, 2.6rem) clamp(1rem, 1vw, 3rem); */
+    padding: 0.75rem;
 
-    border-radius: 0.4vw;
+    border-radius: 5px;
     background-color: ${vars.loginButton};
     
     h1 {

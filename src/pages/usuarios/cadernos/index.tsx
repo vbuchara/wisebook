@@ -1,15 +1,14 @@
-
-
-import type { CadernoDataResponse, ErrorJSON } from '@api-types';
-import type { CookiesType } from '@auth-types';
-import type { GetServerSideProps } from 'next';
-import type { RouteQueryParams } from 'next/router';
-
 import { useRouter } from "next/router";
 import nookies from 'nookies';
 
 import { api } from 'config/AxiosConfig';
 import { ErrorTypes } from 'config/enums/ErrorTypesEnum';
+
+import type { CadernoDataResponse, ErrorJSON } from '@api-types';
+import type { CookiesType } from '@auth-types';
+import type { GetServerSideProps } from 'next';
+import type { RouteQueryParams } from 'next/router';
+import type { HomeProps } from 'src/pages';
 
 type CadernoProps = CadernoServerSideProps;
 
@@ -34,7 +33,7 @@ type CadernoServerSideProps = {
  * Server Side
  */
 export const getServerSideProps: GetServerSideProps<
-    CadernoServerSideProps
+    CadernoServerSideProps | HomeProps
 > = async(context) => {
     const cookies: CookiesType = nookies.get(context);
     
@@ -64,7 +63,7 @@ export const getServerSideProps: GetServerSideProps<
     } catch(error: any){
         return {
             redirect: {
-                destination: '/',
+                destination: `/`,
                 permanent: false,
             }
         }

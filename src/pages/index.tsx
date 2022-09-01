@@ -9,22 +9,19 @@ import nookies from 'nookies';
 
 import { FirebasErrorTypes, ErrorTypes } from 'config/enums/ErrorTypesEnum';
 
-
 import { 
 	MainPage, 
 	Title 
 } from '@styles/index';
 
-type HomeProps = {
-	error?: string
+export type HomeProps = {
+	error?: string | null
 }
-
 
 /**
  * Component
  */
-export default function Home({ error }: HomeProps){
-	
+export default function Home({ error }: HomeProps){	
 	useEffect(() => {
 		if(!error) return;
 
@@ -33,8 +30,14 @@ export default function Home({ error }: HomeProps){
 				autoClose: 4 * 1000,
 			});
 		}
+
+		if(error.includes(ErrorTypes.USER_NOT_LOGGED)){
+			toast.error(error, {
+				autoClose: 4 * 1000,
+			});
+		}
 			
-	}, [error])
+	}, [error]);
 
 	return (
 		<>
@@ -45,21 +48,27 @@ export default function Home({ error }: HomeProps){
 			</Head>
 
 			<MainPage>
-				<Title>Index</Title>
+				<section>
+					<Title>Wisebook Welcoming Text</Title>
+				</section>
 			</MainPage>
 		</>
 	)
 }
 
+/**
+ * Server Side
+ */
+
 export const getServerSideProps: GetServerSideProps<
-	HomeProps
+	HomeProps, { error?: string }
 > = async(context) => {
 	const cookies: CookiesType = nookies.get(context);
-
+	
 	if(!cookies.userToken){
 		return {
 			props: {
-				
+
 			}
 		}
 	}
