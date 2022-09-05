@@ -4,31 +4,39 @@ declare module "@api-types" {
         message: any,
     }
 
-    import { CadernoDataResponse, CadernoQueryParams, CadernoDataSnapshots } from '@api-types/caderno';
+    import { CadernoDataResponse, CadernoPathParams, CadernoDataSnapshots } from '@api-types/caderno';
     
     export { 
-        CadernoDataResponse, CadernoQueryParams, CadernoDataSnapshots
+        CadernoDataResponse, CadernoPathParams, CadernoDataSnapshots
     };
 }
 
 declare module "@api-types/caderno" {
     import { CadernoModel } from '@database-model';
 
-    export namespace CadernoQueryParams {
+    export namespace CadernoPathParams {
         type First = {
             id: string,
-        }
+        };
+
+        type All = {
+
+        };
     }
 
     export namespace CadernoDataResponse {
         type First = {
             cadernoId: string,
-        } & CadernoModel
+        } & CadernoModel;
+
+        type All = {
+            [key: string]: CadernoModel 
+        };
     }
 
     export namespace CadernoDataSnapshots {
-        type First = {
+        type AllCadernos = {
             [key: string]: CadernoModel
-        }
+        };
     }
 }

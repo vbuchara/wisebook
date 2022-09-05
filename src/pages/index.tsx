@@ -1,6 +1,4 @@
 import 'src/config/FirebaseConfig';
-import type { GetServerSideProps } from 'next';
-import type { CookiesType } from '@auth-types';
 
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -14,8 +12,12 @@ import {
 	Title 
 } from '@styles/index';
 
+import type { GetServerSideProps } from 'next';
+import type { CookiesType } from '@auth-types';
+import type { FirebaseError } from 'firebase/app';
+
 export type HomeProps = {
-	error?: string | null
+	error?: FirebaseError
 }
 
 /**
@@ -24,19 +26,18 @@ export type HomeProps = {
 export default function Home({ error }: HomeProps){	
 	useEffect(() => {
 		if(!error) return;
-
-		if(error.includes(FirebasErrorTypes.DECODE_FIREBASE_ID_FAILED)){
+		
+		if(error.code.includes(FirebasErrorTypes.DECODE_FIREBASE_ID_FAILED)){
 			toast.error(ErrorTypes.AUTH_TOKEN_INVALID, {
 				autoClose: 4 * 1000,
 			});
 		}
 
-		if(error.includes(ErrorTypes.USER_NOT_LOGGED)){
-			toast.error(error, {
+		if(error.code.includes(FirebasErrorTypes.ID_TOKEN_EXPIRED)){
+			toast.error(ErrorTypes.SESSION_EXPIRED, {
 				autoClose: 4 * 1000,
 			});
 		}
-			
 	}, [error]);
 
 	return (
@@ -61,7 +62,7 @@ export default function Home({ error }: HomeProps){
  */
 
 export const getServerSideProps: GetServerSideProps<
-	HomeProps, { error?: string }
+	HomeProps
 > = async(context) => {
 	const cookies: CookiesType = nookies.get(context);
 	
@@ -90,13 +91,20 @@ export const getServerSideProps: GetServerSideProps<
 			}
 		}
 	} catch(error: any){
-		if(String(error).includes(FirebasErrorTypes.DECODE_FIREBASE_ID_FAILED)){
+		const errorCode = (error.errorInfo as FirebaseError).code;
+
+		if(
+			errorCode.includes(FirebasErrorTypes.DECODE_FIREBASE_ID_FAILED) ||
+			errorCode.includes(FirebasErrorTypes.ID_TOKEN_EXPIRED)
+		){
 			nookies.destroy(context, 'userToken');
 		}
 		
 		return {
 			props: {
-				error: String(error)
+				error: {
+					...error?.errorInfo
+				} as FirebaseError
 			}
 		}
 	}

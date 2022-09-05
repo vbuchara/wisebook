@@ -14,7 +14,7 @@ import { DatabaseModelsEnum } from "src/config/enums/DatabaseEnums";
 
 export default async function(
     request: NextApiRequest, 
-    response: NextApiResponse<CadernoDataResponse.First | ErrorJSON>
+    response: NextApiResponse<CadernoDataResponse.All | ErrorJSON>
 ) {
     if(request.method === 'GET'){
         const { id } = request.query as CadernoPathParams.First;
@@ -27,14 +27,8 @@ export default async function(
             const data = dataSnapshot.val();
 
             if(data === null) throw new Error("Nenhum dado Encontrado");
-            
-            const cadernoId = Object.keys(data)[0];
-            const firstCaderno: CadernoDataResponse.First = { 
-                cadernoId,
-                ...data[cadernoId]
-            } ;
-
-            return response.status(200).json(firstCaderno);
+        
+            return response.status(200).json(data);
 
         } catch(error: any) {
             return response.status(200).json({

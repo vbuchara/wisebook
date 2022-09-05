@@ -1,8 +1,11 @@
+import { useMemo } from "react";
 import { useRouter } from "next/router";
 import nookies from 'nookies';
 
 import { api } from 'config/AxiosConfig';
 import { ErrorTypes } from 'config/enums/ErrorTypesEnum';
+
+import { CadernosPage, NotebooksListContainer } from "src/styles/cadernos";
 
 import type { CadernoDataResponse, ErrorJSON } from '@api-types';
 import type { CookiesType } from '@auth-types';
@@ -15,18 +18,24 @@ type CadernoProps = CadernoServerSideProps;
 /**
  * Component
  */
-export default function Caderno({ caderno }: CadernoProps){
+export default function Caderno({ cadernos }: CadernoProps){
     const router = useRouter<RouteQueryParams.Cadernos>();
+    const cadernosMap = useMemo(() => {
+        return new Map(Object.entries(cadernos));
+    }, []);
 
     return (
-        <div>
-            <h1>{ caderno?.nome }</h1>
-        </div>
+        <CadernosPage>
+            <NotebooksListContainer>
+                {}
+            </NotebooksListContainer>
+            <h1>{ cadernosMap.get(Object.keys(cadernos)[0])?.nome }</h1>
+        </CadernosPage>
     );
 }
 
 type CadernoServerSideProps = {
-    caderno: CadernoDataResponse.First,
+    cadernos: CadernoDataResponse.All,
 };
 
 /**
@@ -47,17 +56,17 @@ export const getServerSideProps: GetServerSideProps<
 
         const user = await auth.verifyIdToken(cookies.userToken);
 
-        const { data } = await api.get<CadernoDataResponse.First | ErrorJSON>(
-            `/api/${user.uid}/cadernos/first`
+        const { data } = await api.get<CadernoDataResponse.All | ErrorJSON>(
+            `/api/${user.uid}/cadernos/all`
         );
-
+        
         if('error' in data){
-            throw new Error(data.error);
+            throw new Error((data as ErrorJSON).error);
         }
 
         return {
             props: {
-                caderno: data,
+                cadernos: data,
             }
         }
     } catch(error: any){
