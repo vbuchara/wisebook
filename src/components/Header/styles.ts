@@ -4,6 +4,8 @@ import LogoSvg from '@public/logo.svg';
 
 import { colors } from "@styles/colors";
 
+export const headerHeight = "4rem";
+
 export const LogoImage = styled(LogoSvg)`
     @media screen and (max-width: 400px){
         [data-role="text"] {
@@ -21,10 +23,11 @@ export const HeaderStyle = styled.header`
 
     background-color: ${colors.purple_500};
 
-    height: 4rem;
-    padding: 0.3rem;
+    height: ${headerHeight};
+    padding: 0.5rem;
     padding-left: 3vw;
     padding-right: 4vw;
+    box-sizing: border-box;
 
     & > h1 {
         font-size: clamp(1rem, 1.5vw, 2.8rem);

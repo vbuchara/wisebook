@@ -5,7 +5,12 @@ import nookies from 'nookies';
 import { api } from 'config/AxiosConfig';
 import { ErrorTypes } from 'config/enums/ErrorTypesEnum';
 
-import { CadernosPage, NotebooksListContainer } from "src/styles/cadernos";
+import { Notebook } from 'components/Notebook';
+
+import { 
+    CadernosPage, 
+    NotebooksListContainer 
+} from "src/styles/cadernos";
 
 import type { CadernoDataResponse, ErrorJSON } from '@api-types';
 import type { CookiesType } from '@auth-types';
@@ -27,7 +32,18 @@ export default function Caderno({ cadernos }: CadernoProps){
     return (
         <CadernosPage>
             <NotebooksListContainer>
-                {}
+                {Array.from(cadernosMap).map(([id, caderno]) => {
+                    return (
+                        <li
+                            key={id}
+                        >
+                            <Notebook
+                                id={id}
+                                caderno={caderno}
+                            />
+                        </li>
+                    );
+                })}
             </NotebooksListContainer>
             <h1>{ cadernosMap.get(Object.keys(cadernos)[0])?.nome }</h1>
         </CadernosPage>
