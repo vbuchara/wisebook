@@ -5,7 +5,9 @@ import { toast } from 'react-toastify';
 import Head from 'next/head';
 import nookies from 'nookies';
 
-import { FirebasErrorTypes, ErrorTypes } from 'config/enums/ErrorTypesEnum';
+import { DatabaseModelsEnum } from 'config/enums/DatabaseEnums';
+
+import { WisebookError, WisebookErrorToastType } from 'src/errors/WisebookError';
 
 import { 
 	MainPage, 
@@ -17,7 +19,7 @@ import type { CookiesType } from '@auth-types';
 import type { FirebaseError } from 'firebase/app';
 
 export type HomeProps = {
-	error?: FirebaseError
+	error?: string
 }
 
 /**
@@ -26,16 +28,11 @@ export type HomeProps = {
 export default function Home({ error }: HomeProps){	
 	useEffect(() => {
 		if(!error) return;
+		const wisebookError = WisebookError.fromJsonString(error);
 		
-		if(error.code.includes(FirebasErrorTypes.DECODE_FIREBASE_ID_FAILED)){
-			toast.error(ErrorTypes.AUTH_TOKEN_INVALID, {
-				autoClose: 4 * 1000,
-			});
-		}
-
-		if(error.code.includes(FirebasErrorTypes.ID_TOKEN_EXPIRED)){
-			toast.error(ErrorTypes.SESSION_EXPIRED, {
-				autoClose: 4 * 1000,
+		if(wisebookError.toast){
+			toast.error(wisebookError.toast.message, {
+				autoClose: wisebookError.toast.duration,
 			});
 		}
 	}, [error]);
@@ -77,8 +74,25 @@ export const getServerSideProps: GetServerSideProps<
 	try {
 		const admin = await import('config/FirebaseAdminConfig');
 		const auth = admin.default.auth();
+		const database = admin.default.database();
 	
-		await auth.verifyIdToken(cookies.userToken);
+		const user = await auth.verifyIdToken(cookies.userToken);
+
+		const data = await database.ref(DatabaseModelsEnum.USUARIOS)
+			.child(user.uid)
+			.get();
+		
+		if(!data.exists()){
+			await auth.deleteUser(user.uid);
+
+			const error = new WisebookError({
+				message: "Houve algum problema ao carregar os dados do usuário",
+				duration: 10 * 1000
+			} as WisebookErrorToastType);
+			error.setDestroySession();
+
+			throw error;
+		}
 	
 		return {
 			redirect: {
@@ -91,20 +105,15 @@ export const getServerSideProps: GetServerSideProps<
 			}
 		}
 	} catch(error: any){
-		const errorCode = (error.errorInfo as FirebaseError).code;
+		const wisebookError = new WisebookError(error);
 
-		if(
-			errorCode.includes(FirebasErrorTypes.DECODE_FIREBASE_ID_FAILED) ||
-			errorCode.includes(FirebasErrorTypes.ID_TOKEN_EXPIRED)
-		){
+		if(wisebookError.shouldDestroySession()){
 			nookies.destroy(context, 'userToken');
 		}
 		
 		return {
 			props: {
-				error: {
-					...error?.errorInfo
-				} as FirebaseError
+				error: JSON.stringify(wisebookError)
 			}
 		}
 	}

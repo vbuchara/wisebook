@@ -1,9 +1,12 @@
-import { useMemo } from "react";
-import { useRouter } from "next/router";
+import { useEffect, useMemo, useState } from "react";
+import { ref, getDatabase } from 'firebase/database';
+import { useObjectVal } from 'react-firebase-hooks/database';
 import nookies from 'nookies';
 
 import { api } from 'config/AxiosConfig';
 import { ErrorTypes } from 'config/enums/ErrorTypesEnum';
+import { DatabaseModelsEnum } from 'config/enums/DatabaseEnums';
+import { firebaseApp } from 'config/FirebaseConfig';
 
 import { Notebook } from 'components/Notebook';
 
@@ -15,20 +18,41 @@ import {
 import type { CadernoDataResponse, ErrorJSON } from '@api-types';
 import type { CookiesType } from '@auth-types';
 import type { GetServerSideProps } from 'next';
-import type { RouteQueryParams } from 'next/router';
 import type { HomeProps } from 'src/pages';
 
 type CadernoProps = CadernoServerSideProps;
 
+const database = getDatabase(firebaseApp);
+
 /**
  * Component
  */
-export default function Caderno({ cadernos }: CadernoProps){
-    const router = useRouter<RouteQueryParams.Cadernos>();
-    const cadernosMap = useMemo(() => {
-        return new Map(Object.entries(cadernos));
+export default function Caderno({ userId, cadernos }: CadernoProps){
+    const refCadernosPath = useMemo(() => {
+        return DatabaseModelsEnum.USUARIOS + 
+            userId + DatabaseModelsEnum.CADERNOS
     }, []);
 
+    const [cadernosData, loading, error] = useObjectVal<CadernoDataResponse.All, string, string>(
+        ref(database, refCadernosPath)
+    );
+
+    const [cadernosMap, setCadernosMap] = useState(
+        new Map(Object.entries(cadernos))
+    );
+
+    useEffect(() => {
+        if(!cadernosData || !Object.entries(cadernosData)){
+            return;
+        }
+
+        if(!loading && !error && cadernosData){
+            setCadernosMap(
+                new Map(Object.entries(cadernosData))
+            );
+        }
+    }, [cadernosData, loading, error]);
+    
     return (
         <CadernosPage>
             <NotebooksListContainer>
@@ -51,6 +75,7 @@ export default function Caderno({ cadernos }: CadernoProps){
 }
 
 type CadernoServerSideProps = {
+    userId: string,
     cadernos: CadernoDataResponse.All,
 };
 
@@ -82,6 +107,7 @@ export const getServerSideProps: GetServerSideProps<
 
         return {
             props: {
+                userId: user.uid,
                 cadernos: data,
             }
         }
