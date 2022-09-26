@@ -4,21 +4,19 @@ import * as AvatarComponent from '@radix-ui/react-avatar';
 import * as DropdownComponent from '@radix-ui/react-dropdown-menu';
 
 import { 
-    WisebookDialog
+    WisebookDialog,
+    AlertDialogContent
 } from 'components/WisebookDialog';
 
-import { colors } from 'src/styles/colors';
+import { colors } from '@styles/base/colors';
+import { boxShadow } from '@styles/base/mixin';
+import { fontSizes } from '@styles/base/fonts';
 
 export const UserLoggedContainer = styled.div`
     padding: 0 1rem;  
 `;
 
 export const LogoutDialog = styled(WisebookDialog)`
-    width: 250px;
-
-    .buttons-div {
-        justify-content: center;
-    }
 `;
 
 export const DropdownTrigger = styled(DropdownComponent.Trigger)`
@@ -45,7 +43,7 @@ export const DropdownSeparator = styled(DropdownComponent.Separator)`
 
 
 export const DropdownLabel = styled(DropdownComponent.Label)`
-    --font-svg-size: clamp(0.95rem,1vw,2.5rem);
+    --font-svg-size: ${fontSizes.clampBase('0.95rem', undefined, '2.5rem')};
 
     display: flex;
     align-items: center;
@@ -65,10 +63,6 @@ export const DropdownLabel = styled(DropdownComponent.Label)`
     font-weight: 600;
     font-size: var(--font-svg-size);
 
-    label {
-        max-width: 80%;
-    }
-
     svg {
         width: var(--font-svg-size);
         height: var(--font-svg-size);
@@ -83,40 +77,45 @@ export const DropdownItem = styled(DropdownComponent.Item)`
 
     &:is(button){
         ${css`
-            --text-color: ${colors.white};
-            --text-color-hover: ${colors.purple_500};
+            --background-color: ${colors.purple_500};
+            --color: ${colors.white};
             --font-svg-size: clamp(1rem,1.2vw,2.8rem);
+
+            --transition: 0.1s ease-in;
 
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 0.2rem;
 
-            background-color: ${colors.purple_500};
-            color: var(--text-color);
+            background-color: var(--background-color);
+            color: var(--color);
             padding: 0.25rem;
             font-size: var(--font-svg-size);
 
             border-radius: 3px;
             border: 2px solid ${colors.purple_500};
 
+            transition: background-color var(--transition), 
+                color var(--transition);
+
             svg {
                 width: var(--font-svg-size);
                 height: var(--font-svg-size);
 
-                fill: var(--text-color);
+                fill: var(--color);
+
+                transition: fill var(--transition);
             }
 
             &:hover{
-                background-color: ${
+                --background-color: ${
                     lighten(0.5, colors.purple_500)
                 };
-                color: var(--text-color-hover);
-
-                svg {
-                    fill: var(--text-color-hover);
-                }
+                --color: ${colors.purple_500};
             }
+
+            ${boxShadow().onActive}
         `}
     }
 `;
@@ -125,35 +124,17 @@ export const DropdownContent = styled(DropdownComponent.Content)`
     display: flex;
     flex-direction: column;
 
-    box-shadow: 0px 0px 5px 1px ${colors.white};
     background-color: ${colors.purple_200};
 
     border-radius: 5px;
     padding: 0.5rem 0;
-`;
 
-export const TitleHeading = styled.h1`
-    color: ${colors.purple_800};
-    font-weight: 600;
-    font-size: 1.1rem;
-    text-align: center;
-`;
-
-export const ActionButton = styled.button<ActionButtonProps>`
-    --primary-color: ${props => props.primaryColor};
-    --secondary-color: ${props => props.secondaryColor};
-
-    background-color: var(--primary-color);
-    color: var(--secondary-color);
-    border: 2px solid var(--primary-color);
-    border-radius: 3px;
-
-    padding: 0.2rem 0.5rem;
-
-    &:hover {
-        background-color: var(--secondary-color);
-        color: var(--primary-color);
-    }
+    ${boxShadow({ 
+        color: colors.white,
+        transparentizeValue: 0,
+        length: '0px 0px 5px 1px',
+        inset: false
+     }).normal};
 `;
 
 export const Avatar = styled(AvatarComponent.Root)`
@@ -183,8 +164,3 @@ export const AvatarFallback = styled(AvatarComponent.Fallback)`
         }
     }
 `;
-
-type ActionButtonProps = {
-    primaryColor: string,
-    secondaryColor: string,
-}

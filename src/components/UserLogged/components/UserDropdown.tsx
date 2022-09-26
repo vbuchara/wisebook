@@ -7,20 +7,17 @@ import * as Dropdown from '@radix-ui/react-dropdown-menu';
 
 import { firebaseApp } from 'config/FirebaseConfig';
 
-import UserIcon from '@public/person-icon.svg';
+import { useTokenRefreshIntervalContext } from "src/hooks/useTokenRefreshIntervalContext";
+
 import LogoutIcon from '@public/logout-icon.svg';
 
-import { colors } from 'src/styles/colors';
-
 import { 
-    ActionButton,
     DropdownArrow,
     DropdownContent, 
     DropdownItem, 
     DropdownLabel, 
     DropdownSeparator,
-    LogoutDialog,
-    TitleHeading
+    LogoutDialog
 } from "../styles";
 
 import type { User } from 'firebase/auth';
@@ -45,6 +42,7 @@ export function UserDropdown({
 }: UserDropdownProps){
     const auth = getAuth(firebaseApp);
     const router = useRouter();
+    const [tokenRefreshInterval] = useTokenRefreshIntervalContext();
 
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -56,6 +54,7 @@ export function UserDropdown({
 
             await signOut(auth);
             nookies.destroy(null, "userToken");
+            window.clearInterval(tokenRefreshInterval!);
             router.push("/");
         })();
     }
@@ -78,37 +77,6 @@ export function UserDropdown({
         );
     }, []);
 
-    const DialogTitle = useMemo(() => {
-        return (
-            <TitleHeading>
-                Tem certeza que deseja sair da conta atual?
-            </TitleHeading>
-        );
-    }, []);
-
-    const DialogCancel = useMemo(() => {
-        return (
-            <ActionButton
-                primaryColor={colors.red}
-                secondaryColor={colors.white}
-            >
-                Não
-            </ActionButton>
-        );
-    }, []);
-
-    const DialogAction = useMemo(() => {
-        return (
-            <ActionButton
-                primaryColor={colors.purple_500}
-                secondaryColor={colors.white}
-                onClick={handleLogout}
-            >
-                Sim
-            </ActionButton>
-        );
-    }, []);
-
     useEffect(() => {
         (openDialog) ? cancelDropdownClose() : allowDropdownClose();
     }, [openDialog]);
@@ -121,11 +89,6 @@ export function UserDropdown({
                 onMouseLeave={contentOnMouseLeave}
             >
                 <DropdownLabel>
-                    <UserIcon
-                        width={undefined}
-                        height={undefined}
-                        viewBox="0 0 48 48"
-                    />
                     <LinesEllipsis
                         text={user.displayName || undefined}
                         maxLine={3}
@@ -139,9 +102,10 @@ export function UserDropdown({
                     open={openDialog}
                     onOpenChange={setOpenDialog}
                     trigger={LogoutButton}
-                    title={DialogTitle}
-                    cancel={DialogCancel}
-                    action={DialogAction}
+                    title="Tem certeza que deseja sair da conta atual?"
+                    cancel="Não"
+                    action="Sim"
+                    onActionClick={handleLogout}
                 />
                 <DropdownArrow/>
             </DropdownContent>

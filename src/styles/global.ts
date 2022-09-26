@@ -1,8 +1,8 @@
 import { createGlobalStyle } from "styled-components";
 import { lighten } from 'polished';
 
-import { animations } from "./animations";
-import { colors } from "./colors";
+import { animations } from "./base/animations";
+import { colors } from "./base/colors";
 
 export const GlobalStyles = createGlobalStyle`
     ${animations};

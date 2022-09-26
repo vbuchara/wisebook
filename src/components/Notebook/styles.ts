@@ -9,12 +9,23 @@ export const Container = styled.div`
     align-items: center;
     gap: 0.5rem;
 
-    padding: 1rem 2rem;
-
-    & > svg {
+    & > button > svg {
         width: 100px;
+        height: 100%;
+    }
+
+    & > button {
+        width: 100px;
+        height: auto;
+        box-sizing: content-box;
+        background-color: transparent;
     }
 `;
+
+type NotebookModelProps = {
+    borderColor?: string;
+    coverColor?: string;
+};
 
 export const NotebookModel = styled(NotebookModelSvg).withConfig({
     shouldForwardProp: (prop) => !['borderColor', 'coverColor'].includes(prop)
@@ -31,7 +42,9 @@ export const NotebookModel = styled(NotebookModelSvg).withConfig({
     `};
 `;
 
-type NotebookModelProps = {
-    borderColor?: string;
-    coverColor?: string;
-};
+export const ActionButtonsDiv = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+`;

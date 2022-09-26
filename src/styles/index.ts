@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colors } from "./colors";
+import { colors } from "./base/colors";
 
 export const Title = styled.h1`
     color: ${colors.purple_400};

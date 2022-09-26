@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { ToastContainer } from "react-toastify";
 import { darken, lighten } from 'polished';
 
-import { colors } from 'src/styles/colors';
+import { colors } from '@styles/base/colors';
 
 export const WisebookToastContainer = styled(ToastContainer)`
     &&&.Toastify__toast-container {

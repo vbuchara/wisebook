@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { colors } from "@styles/colors";
+import { colors } from "@styles/base/colors";
 
 const vars = {
     loginButton: colors.red,

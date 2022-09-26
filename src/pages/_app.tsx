@@ -8,32 +8,23 @@ import { parseCookies } from 'nookies';
 import { Header } from 'components/Header';
 import { WisebookToast } from 'components/WisebookToast';
 
-import { GlobalStyles } from '@styles/global';
-
 import { firebaseApp } from 'src/config/FirebaseConfig';
+
+import { TokenRefreshIntervalContextProvider } from 'src/contexts/TokenRefreshIntervalContext';
+
+import { GlobalStyles } from '@styles/global';
 
 import type { AppProps } from 'next/app';
 import type { CookiesType } from '@auth-types';
 
 function App({ Component, pageProps }: AppProps) {
-	const auth = getAuth(firebaseApp);
-	const [user, authStateLoading] = useAuthState(auth);
-
-	useEffect(() => {
-        const cookies: CookiesType = parseCookies(null);
-
-        if(!cookies.userToken && user && !authStateLoading){
-            signOut(auth);
-        }
-    }, [authStateLoading]);
-
 	return (
-		<>
+		<TokenRefreshIntervalContextProvider>
 			<WisebookToast />
 			<GlobalStyles />
 			<Header />
 			<Component {...pageProps} />
-		</>
+		</TokenRefreshIntervalContextProvider>
 	);
 }
 

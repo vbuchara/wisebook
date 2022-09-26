@@ -1,17 +1,24 @@
 import * as AlertDialogComponent from '@radix-ui/react-alert-dialog';
 
 import {
+    AlertDialogTitle,
     AlertDialogContent,
     AlertDialogPortal,
     AlertDialogOverlay,
-    AlertDialogTrigger
+    AlertDialogTrigger,
+    AlertDialogCancel,
+    AlertDialogAction
 } from './styles';
+
+import type { MouseEventHandler } from 'react';
 
 type WisebookDialogBaseProps = {
     trigger: JSX.Element,
     title: string | JSX.Element,
     description?: string | JSX.Element,
+    onCancelClick?: MouseEventHandler<HTMLButtonElement>,
     cancel: string | JSX.Element,
+    onActionClick?: MouseEventHandler<HTMLButtonElement>
     action: string | JSX.Element,
     className?: string,
     open?: boolean,
@@ -20,6 +27,7 @@ type WisebookDialogBaseProps = {
 
 export function WisebookDialog({ 
     trigger, title, description, cancel, action,
+    onActionClick, onCancelClick,
     className, open, onOpenChange
  }: WisebookDialogBaseProps){
     return (
@@ -39,11 +47,11 @@ export function WisebookDialog({
                 <AlertDialogContent
                     className={className}
                 >
-                    <AlertDialogComponent.Title
+                    <AlertDialogTitle
                         asChild={typeof title !== 'string'}
                     >
                         {title}
-                    </AlertDialogComponent.Title>
+                    </AlertDialogTitle>
                     {description && (
                         <AlertDialogComponent.Description
                             asChild={typeof description !== 'string'}
@@ -54,16 +62,18 @@ export function WisebookDialog({
                     <div
                         className="buttons-div"
                     >
-                        <AlertDialogComponent.Cancel
+                        <AlertDialogCancel
                             asChild={typeof cancel !== 'string'}
+                            onClick={onCancelClick}
                         >
                             {cancel}
-                        </AlertDialogComponent.Cancel>
-                        <AlertDialogComponent.Action
+                        </AlertDialogCancel>
+                        <AlertDialogAction
                             asChild={typeof action !== 'string'}
+                            onClick={onActionClick}
                         >
                             {action}
-                        </AlertDialogComponent.Action>
+                        </AlertDialogAction>
                     </div>
                 </AlertDialogContent>
             </AlertDialogPortal>
@@ -71,9 +81,4 @@ export function WisebookDialog({
     );
 }
 
-export {
-    AlertDialogContent,
-    AlertDialogPortal,
-    AlertDialogOverlay,
-    AlertDialogTrigger
-};
+export * from './styles';

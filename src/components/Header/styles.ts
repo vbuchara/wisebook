@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import LogoSvg from '@public/logo.svg';
 
-import { colors } from "@styles/colors";
+import { colors } from "@styles/base/colors";
 
 export const headerHeight = "4rem";
 
