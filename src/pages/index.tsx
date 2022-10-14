@@ -106,7 +106,7 @@ export const getServerSideProps: GetServerSideProps<
 		}
 	} catch(error: any){
 		const wisebookError = new WisebookError(error);
-
+		console.log(error);
 		if(wisebookError.shouldDestroySession()){
 			nookies.destroy(context, 'userToken');
 		}

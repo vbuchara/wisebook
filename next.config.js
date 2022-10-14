@@ -1,14 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["lh3.googleusercontent.com"]
+    domains: ["lh3.googleusercontent.com", "i.imgur.com"]
   },
   reactStrictMode: true,
   async rewrites() {
     return [
       {
-        source: '/cadernos',
-        destination: '/usuarios/cadernos',
+        source: '/cadernos/:name*',
+        destination: '/usuarios/cadernos/:name*',
       }
     ]
   },

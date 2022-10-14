@@ -85,6 +85,7 @@ export const AlertDialogContent = styled(AlertDialogComponent.Content)`
     top: 25%;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 1000;
 
     width: 250px;
     max-width: 100%;

@@ -1,17 +1,16 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
-import { getAuth } from 'firebase/auth';
-import { getDatabase, ref, push } from 'firebase/database';
+import { ref, push, child } from 'firebase/database';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useObjectVal } from 'react-firebase-hooks/database';
 import { toast } from 'react-toastify';
 
 import { LoadingComponent } from 'src/components/LoadingComponent';
 
-import { firebaseApp } from 'src/config/FirebaseConfig';
+import { auth, database } from 'src/config/firebase';
 import { DatabaseModelsEnum } from 'src/config/enums/DatabaseEnums';
-import { DefaultCaderno } from 'src/config/DefaultEntitiesConfig';
+import { DefaultCaderno, DefaultPagina } from 'src/config/DefaultEntitiesConfig';
 
 import { incrementEntityNumber } from 'src/functions/incrementEntityNumber';
 
@@ -19,15 +18,12 @@ import { AddButton } from "./styles";
 
 import type { MouseEventHandler, MouseEvent } from 'react';
 import type { Id } from 'react-toastify';
-import type { CadernoModel } from '@database-model';
+import type { CadernoModel, PaginaModel } from '@database-model';
 import type { CadernoDataResponse } from '@api-types';
 
 type NotebookAddButtonProps = {
     onClick?: MouseEventHandler<HTMLButtonElement>
 };
-
-const auth = getAuth(firebaseApp);
-const database = getDatabase(firebaseApp);
 
 export function NotebookAddButton({ onClick }: NotebookAddButtonProps){
     const toastIdRef = useRef<Id>();
@@ -45,7 +41,7 @@ export function NotebookAddButton({ onClick }: NotebookAddButtonProps){
 
     const [cooldown, setCooldown] = useState(false);
 
-    function handleAddCadernoOnClick(event: MouseEvent<HTMLButtonElement>){
+    async function handleAddCadernoOnClick(event: MouseEvent<HTMLButtonElement>){
         if(cooldown) {
             if(toastIdRef.current && toast.isActive(toastIdRef.current)) return;
 
@@ -63,11 +59,14 @@ export function NotebookAddButton({ onClick }: NotebookAddButtonProps){
         } : {
             ...DefaultCaderno
         };
-
         const newCaderno = incrementEntityNumber(cadernoToCopy);
 
         setCooldown(true);
-        push<CadernoModel>(ref(database, refCadernosPath), newCaderno);
+        const cadernoRef = await push<CadernoModel>(ref(database, refCadernosPath), newCaderno);
+        push<PaginaModel>(
+            child(cadernoRef, DatabaseModelsEnum.PAGINAS),
+            DefaultPagina
+        );
     }
 
     useEffect(() => {

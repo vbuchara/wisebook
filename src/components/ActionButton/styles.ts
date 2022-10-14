@@ -5,12 +5,19 @@ import { colors } from '@styles/base/colors';
 import { fontSizes } from '@styles/base/fonts';
 import { boxShadow } from '@styles/base/mixin';
 
-export const TooltipContent = styled(TooltipComponent.Content)`
+type TooltipContentProps = {
+    color?: string
+};
+
+export const TooltipContent = styled(TooltipComponent.Content)<TooltipContentProps>`
+    --background-color: ${colors.white};
+    --color: ${({ color }) => color || colors.purple_800};
+
     border-radius: 4px;
     padding: 0.5rem;
     line-height: 1;
-    background-color: ${colors.white};
-    color: ${colors.purple_800};
+    background-color: var(--background-color);
+    color: var(--color);
     font-size: ${fontSizes.clampBase('1rem')};
     
     ${boxShadow({ 
@@ -36,8 +43,11 @@ export const RoundedButton = styled.button.withConfig({
     --svg-size: ${fontSizes.clampBase("1rem")};
     --button-diameter: var(--svg-size);
 
-    --color: ${({ iconColor }) => iconColor || colors.white};
-    --background-color: ${({ backgroundColor }) => backgroundColor || colors.purple_800};
+    --primary-color: ${({ backgroundColor }) => backgroundColor || colors.purple_800};
+    --secondary-color: ${({ iconColor }) => iconColor || colors.white};
+
+    --background-color: var(--primary-color);
+    --color: var(--secondary-color);
 
     --transition: 0.3s ease-in;
     --parent-transition: background-color var(--transition);
@@ -68,8 +78,8 @@ export const RoundedButton = styled.button.withConfig({
     }
 
     &:hover{
-        --background-color: ${({ iconColor }) => iconColor || colors.white};
-        --color: ${({ backgroundColor }) => backgroundColor || colors.purple_800};
+        --background-color: var(--secondary-color);
+        --color: var(--primary-color);
 
         transition: box-shadow 1s ease-out,
             var(--parent-transition);

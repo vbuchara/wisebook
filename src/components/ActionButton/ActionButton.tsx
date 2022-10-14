@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as TooltipComponent from "@radix-ui/react-tooltip";
 
@@ -16,7 +16,9 @@ type ActionButtonProps = {
     iconColor?: string,
     backgroundColor?: string,
     tooltipText?: string,
-    onClick?: MouseEventHandler
+    tooltipTextColor?: string,
+    onClick?: MouseEventHandler,
+    className?: string
 };
 
 export function ActionButton({
@@ -24,8 +26,11 @@ export function ActionButton({
     iconColor,
     backgroundColor,
     tooltipText,
-    onClick
+    tooltipTextColor,
+    onClick,
+    className
 }: ActionButtonProps){
+    const roundedButtonRef = useRef<HTMLButtonElement>(null);
     const [open, setOpen] = useState(false);
 
     return (
@@ -39,6 +44,8 @@ export function ActionButton({
                     asChild
                 >
                     <RoundedButton
+                        ref={roundedButtonRef}
+                        className={className}
                         iconColor={iconColor}
                         backgroundColor={backgroundColor}
                         onClick={onClick}
@@ -49,7 +56,9 @@ export function ActionButton({
                     </RoundedButton>
                 </TooltipComponent.Trigger>
                 <TooltipComponent.Portal>
-                    <TooltipContent>
+                    <TooltipContent
+                        color={tooltipTextColor}
+                    >
                         <h1>{tooltipText}</h1>
                         <TooltipArrow/>
                     </TooltipContent>

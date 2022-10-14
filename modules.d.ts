@@ -7,3 +7,9 @@ declare module "@fortawesome/fontawesome-svg-core/import.macro" {
 
     export function regular(icon: IconName): IconProp;
 }
+
+declare module "react-imask/extended" {
+    export type InputMaskRef<Opts extends IMask.AnyMaskedOptions = IMask.AnyMaskedOptions> = {
+        maskRef: IMask.InputMask<Opts>;
+    };
+}

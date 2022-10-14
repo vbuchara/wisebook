@@ -13,7 +13,6 @@ const SCROLLBAR_PADDING_INLINE = `calc(2 * ${SCROLLBAR_PADDING})` as const;
 export const CadernosPage = styled.main`
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
 
     height: calc(100vh - ${headerHeight});
 
@@ -21,6 +20,23 @@ export const CadernosPage = styled.main`
 
     * {
         font-size: clamp(1rem,1.2vw,2.8rem);
+    }
+
+    .main-view{
+        flex: 1;
+        align-self: stretch;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+
+        overflow-x: hidden;
+
+        & > div {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
     }
 `;
 
@@ -51,7 +67,6 @@ export const ScrollViewport = styled(ScrollAreaComponent.Viewport).withConfig({
         return !isScrollVisible 
             ? "" 
             : css`
-
                 & > div > * {
                     --scrollbar-width: ${SCROLLBAR_WIDTH};
                     --scrollbar-padding-inline: ${SCROLLBAR_PADDING_INLINE};
@@ -64,13 +79,8 @@ export const ScrollViewport = styled(ScrollAreaComponent.Viewport).withConfig({
     ul {
         display: flex;
         flex-direction: column;
-        gap: clamp(1.25rem, 1vw + 0.5rem, 3rem);
 
-        padding-block: 1rem;
-
-        & > li {
-            padding-inline: 2rem;
-        } 
+        padding-block: 0.5rem;
     }
 `;
 

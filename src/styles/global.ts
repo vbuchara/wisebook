@@ -34,4 +34,8 @@ export const GlobalStyles = createGlobalStyle`
     button {
         cursor: pointer;
     }
+
+    textarea[aria-hidden="true"]{
+        line-height: 1 !important;
+    }
 `;

@@ -21,7 +21,7 @@ declare module "next/router" {
 
     export namespace RouteQueryParams {
         interface Cadernos extends ParsedUrlQuery {
-            id: string
+            name?: string[]
         }
     }
 }

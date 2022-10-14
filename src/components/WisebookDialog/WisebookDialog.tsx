@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import * as AlertDialogComponent from '@radix-ui/react-alert-dialog';
 
 import {
@@ -10,16 +11,16 @@ import {
     AlertDialogAction
 } from './styles';
 
-import type { MouseEventHandler } from 'react';
+import { MouseEventHandler } from 'react';
 
 type WisebookDialogBaseProps = {
-    trigger: JSX.Element,
-    title: string | JSX.Element,
-    description?: string | JSX.Element,
+    trigger: React.ReactNode,
+    title: string | React.ReactNode,
+    description?: string | React.ReactNode,
     onCancelClick?: MouseEventHandler<HTMLButtonElement>,
-    cancel: string | JSX.Element,
+    cancel: string | React.ReactNode,
     onActionClick?: MouseEventHandler<HTMLButtonElement>
-    action: string | JSX.Element,
+    action: string | React.ReactNode,
     className?: string,
     open?: boolean,
     onOpenChange?: (open: boolean) => void

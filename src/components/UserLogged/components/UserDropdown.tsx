@@ -1,11 +1,11 @@
 import { useMemo, useState, useEffect } from "react";
-import { getAuth, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { useRouter } from "next/router";
 import LinesEllipsis from "react-lines-ellipsis";
 import nookies from 'nookies';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 
-import { firebaseApp } from 'config/FirebaseConfig';
+import { auth } from 'config/firebase/getAuth';
 
 import { useTokenRefreshIntervalContext } from "src/hooks/useTokenRefreshIntervalContext";
 
@@ -40,7 +40,6 @@ export function UserDropdown({
     cancelDropdownClose,
     setDropdownOpen
 }: UserDropdownProps){
-    const auth = getAuth(firebaseApp);
     const router = useRouter();
     const [tokenRefreshInterval] = useTokenRefreshIntervalContext();
 
@@ -53,7 +52,7 @@ export function UserDropdown({
             setDropdownOpen(false);
 
             await signOut(auth);
-            nookies.destroy(null, "userToken");
+            nookies.destroy({}, "userToken");
             window.clearInterval(tokenRefreshInterval!);
             router.push("/");
         })();

@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ref, getDatabase } from 'firebase/database';
+import { ref } from 'firebase/database';
 import { useObjectVal } from 'react-firebase-hooks/database';
+import { useRouter } from "next/router";
 import nookies from 'nookies';
 
 import { api } from 'config/AxiosConfig';
 import { ErrorTypes } from 'config/enums/ErrorTypesEnum';
 import { DatabaseModelsEnum } from 'config/enums/DatabaseEnums';
-import { firebaseApp } from 'config/FirebaseConfig';
+import { database } from 'config/firebase/getDatabase';
 
 import { Notebook } from 'components/Notebook';
 import { NotebookAddButton } from "components/NotebookAddButton";
@@ -22,18 +23,40 @@ import {
 import type { CadernoDataResponse, ErrorJSON } from '@api-types';
 import type { CookiesType } from '@auth-types';
 import type { GetServerSideProps } from 'next';
+import type { RouteQueryParams } from 'next/router';
 import type { HomeProps } from 'src/pages';
+import { NotebookView } from "src/components/NotebookView";
 
 type CadernoProps = CadernoServerSideProps;
-
-const database = getDatabase(firebaseApp);
 
 /**
  * Component
  */
 export default function Caderno({ userId, cadernos }: CadernoProps){
-    const scrollbarRef = useRef<HTMLDivElement>(null);
-    const scrollbarDataState = scrollbarRef.current?.getAttribute("data-state");
+    const router = useRouter<RouteQueryParams.Cadernos>();
+
+    const [dataState, setDataState] = useState<string>();
+    const [cadernosMap, setCadernosMap] = useState(
+        new Map(Object.entries(cadernos).reverse())
+    );
+
+    const selectedCadernoKey = useMemo<string | undefined>(() => {
+        if(cadernosMap.size === 0) return undefined;
+
+        const cadernoNome = router.query.name?.[0];
+
+        let selectedCadernoKey = Array.from(cadernosMap)
+            .find(([key, caderno]) => {
+                const nome = caderno.nome.replaceAll(" ", "")
+                    .toLowerCase();
+
+                if(nome === cadernoNome){
+                    return [key, caderno];
+                }
+            })?.[0] || Object.keys(cadernos)[0];
+
+        return selectedCadernoKey;
+    }, [router.query]);
 
     const refCadernosPath = useMemo(() => {
         return DatabaseModelsEnum.USUARIOS + 
@@ -41,15 +64,11 @@ export default function Caderno({ userId, cadernos }: CadernoProps){
     }, []);
 
     const isScrollbarVisible = useMemo(() => {
-        return Boolean(scrollbarDataState);
-    }, [scrollbarDataState]);
+        return Boolean(dataState);
+    }, [dataState]);
     
     const [cadernosData, loading, error] = useObjectVal<CadernoDataResponse.All, string, string>(
         ref(database, refCadernosPath)
-    );
-
-    const [cadernosMap, setCadernosMap] = useState(
-        new Map(Object.entries(cadernos).reverse())
     );
 
     useEffect(() => {
@@ -84,6 +103,7 @@ export default function Caderno({ userId, cadernos }: CadernoProps){
                                     <Notebook
                                         id={id}
                                         caderno={caderno}
+                                        isSelected={selectedCadernoKey === id}
                                     />
                                 </li>
                             );
@@ -91,13 +111,28 @@ export default function Caderno({ userId, cadernos }: CadernoProps){
                     </ul>
                 </ScrollViewport>
                 <ScrollScrollbar 
-                    ref={scrollbarRef}
+                    ref={(ref) => {
+                        setDataState(ref?.getAttribute("data-state") || undefined);
+                    }}
                     orientation="vertical"
                 >
                     <ScrollThumb />
                 </ScrollScrollbar>
             </ScrollArea>
-            <h1>{ cadernosMap.get(Object.keys(cadernos)[0])?.nome }</h1>
+            <div className="main-view">
+                {(selectedCadernoKey) 
+                    ? (
+                        <NotebookView
+                            refPath={refCadernosPath}
+                            caderno={{
+                                id: selectedCadernoKey,
+                                ...cadernosMap.get(selectedCadernoKey)!
+                            }}
+                        />
+                    )
+                    : (<h1>Nenhum caderno cadastrado</h1>)
+                }
+            </div>
         </CadernosPage>
     );
 }
