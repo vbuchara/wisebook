@@ -3,13 +3,15 @@ import isEqual from 'lodash/isEqual';
 
 import { DatabaseModelsEnum } from 'src/config/enums/DatabaseEnums';
 
+import { NotebookPage } from './components/NotebookPage';
+import { NotebookPageSelect } from './components/NotebookPageSelect';
+import { NotebookPageControl } from './components/NotebookPageControl';
+
 import {
     Container, 
 } from './styles';
 
 import type { CadernoModel, PaginaModel, WithId } from "@database-model";
-import { NotebookPage } from './components/NotebookPage';
-import { NotebookPageSelect } from './components/NotebookPageSelect';
 
 type NotebookViewProps = {
     refPath: string,
@@ -23,18 +25,22 @@ export function NotebookViewComponent({
 
     const notebookPagesMap = useMemo<Map<number, WithId<PaginaModel>>>(() => {
         if(!caderno.paginas) return new Map();
-
+        
         const formattedPages = Object.entries(caderno.paginas)
             .map<[number, WithId<PaginaModel>]>(
                 ([key, pagina]) => [pagina.numero_pagina, { id: key, ...pagina }]
             );
 
         return new Map(formattedPages);
-    }, [caderno.id, Object.keys(caderno.paginas || {}).length]);
+    }, [
+        caderno.id,
+        Object.values(caderno.paginas || {}).pop()?.numero_pagina, 
+        Object.keys(caderno.paginas || {}).length
+    ]);
 
     const lastNotebookPageNumber = useMemo<number>(() => {
         return Array.from(notebookPagesMap.keys()).pop() || 1;
-    }, [notebookPagesMap.size]);
+    }, [notebookPagesMap]);
     
     const [pageNumberSelected, setPageNumberSelected] = useState(1);
 
@@ -47,7 +53,7 @@ export function NotebookViewComponent({
         }
 
         return notebookPage;
-    }, [refPath, caderno.id, pageNumberSelected]);
+    }, [refPath, caderno.id, pageNumberSelected, notebookPagesMap]);
 
     const refPagePath = useMemo(() => {
         const pageKey = notebookPageSelected.id;
@@ -58,6 +64,12 @@ export function NotebookViewComponent({
 
     return (
         <Container>
+            <NotebookPageControl
+                refPagePath={refPagePath}
+                notebookPagesQuantity={notebookPagesMap.size}
+                pageNumberSelected={pageNumberSelected}
+                setPageNumberSelected={setPageNumberSelected}
+            />
             <NotebookPage
                 caderno={caderno}
                 page={notebookPageSelected}

@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { update, ref } from '@firebase/database';
 import TextAreaAutoResize from 'react-textarea-autosize';
 import debounce from 'lodash/debounce';
+import * as indent from 'indent-textarea';
 
 import { database } from 'src/config/firebase/getDatabase';
 
@@ -15,6 +16,10 @@ type NotebookPageProp = {
     refPagePath: string,
     pageNumberSelected: number
 }
+
+type HandleTextareaOnKeyPressCallbacksMapType = HandleOnKeyPressCallbacksType<
+    HTMLTextAreaElement
+>;
 
 export function NotebookPage({
     caderno,
@@ -33,19 +38,41 @@ export function NotebookPage({
         page.text || ""
     );
 
+    const handleTextareaOnKeyPressCallbacksMap = useMemo<HandleTextareaOnKeyPressCallbacksMapType>(() => {
+        return new Map<KeyboardEventKey, (event: React.KeyboardEvent<HTMLTextAreaElement>) => void>([
+            ['Enter', handlePageTextEnter],
+            ['Tab', handlePageTextTab],
+            ['Shift', (event) => { 
+                event.preventDefault();
+             }]
+        ]) as HandleTextareaOnKeyPressCallbacksMapType;
+    }, [pageText]);
+
+    function handlePageTextEnter(event: React.KeyboardEvent<HTMLTextAreaElement>){
+        if(pageLineCountRef.current! < pageLineLimit) return;
+
+
+        event.preventDefault();
+    }
+
+    function handlePageTextTab(event: React.KeyboardEvent<HTMLTextAreaElement>){
+        event.preventDefault();
+        if(!pageTextTextareaRef.current) return;
+
+        if(event.shiftKey){
+            indent.unindent(pageTextTextareaRef.current);
+            return;
+        }
+
+        indent.indent(pageTextTextareaRef.current);
+    }
+
     function handlePageTextOnChange(event: React.ChangeEvent<HTMLTextAreaElement>){
         if(!pageTextTextareaRef.current || !pageLineHeightRef.current) return;
 
         oldPageTextRef.current = pageText;
         setPageText(event.target.value);
     }
-
-    const debouncedHandleUpdatePageText = useCallback(debounce(
-        handleUpdatePageText, 750, { 
-            leading: false, 
-            trailing: true 
-        }
-    ), [refPagePath, caderno.id, pageNumberSelected]);
 
     function handleUpdatePageText(pageTextValue: string){
         const pageSelected = page;
@@ -61,11 +88,34 @@ export function NotebookPage({
         );
     }
 
+    const debouncedHandleUpdatePageText = useCallback(debounce(
+        handleUpdatePageText, 750, { 
+            leading: false, 
+            trailing: true 
+        }
+    ), [refPagePath, caderno.id, pageNumberSelected, page.id]);
+
+    const debouncedTextAreaOnChange = useCallback(debounce(
+        handlePageTextOnChange, 200, {
+            leading: true
+        }
+    ), [pageText]);
+
+    const debouncedTextAreaOnKeyDown = useCallback(debounce(
+        (event) => {
+            handleTextareaOnKeyPressCallbacksMap.get(event.key)?.(event);
+        },
+        50,
+        {
+            leading: true
+        }
+    ), [handleTextareaOnKeyPressCallbacksMap]);
+
     useEffect(() => {
         oldPageTextRef.current = undefined;
         setPageText(page.text || "");
         debouncedHandleUpdatePageText.cancel();
-    }, [caderno.id, pageNumberSelected]);
+    }, [caderno.id, pageNumberSelected, page.id]);
 
     useEffect(() => {
         if(!pageTextTextareaRef.current || !pageLineHeightRef.current) return;
@@ -73,7 +123,7 @@ export function NotebookPage({
         const pageTextareaHeight = parseInt(pageTextTextareaRef.current.style.height);
         const pageLineHeight = pageLineHeightRef.current - 1;
         pageLineCountRef.current = pageTextareaHeight / pageLineHeight;
-    }, [caderno.id, pageNumberSelected]);
+    }, [caderno.id, pageNumberSelected, page.text, page.id]);
 
     useEffect(() => {
         if(!pageTextTextareaRef.current || !pageLineHeightRef.current) return;
@@ -87,7 +137,7 @@ export function NotebookPage({
 
             return;
         };
-        
+    
         debouncedHandleUpdatePageText(pageText);
     }, [pageText]);
 
@@ -101,18 +151,14 @@ export function NotebookPage({
             >
                 <TextAreaAutoResize
                     ref={pageTextTextareaRef}
-                    onChange={handlePageTextOnChange}
+                    onChange={debouncedTextAreaOnChange}
                     value={pageText}
                     minRows={1}
                     maxRows={pageLineLimit}
                     onHeightChange={(height, info) => {
                         pageLineHeightRef.current = info.rowHeight;
                     }}
-                    onKeyDown={(event) => {
-                        if(event.key === "Enter" && pageLineCountRef.current! >= pageLineLimit){
-                            event.preventDefault();
-                        }
-                    }}
+                    onKeyDown={debouncedTextAreaOnKeyDown}
                 />
             </div>
             <NotebookPageSvg />

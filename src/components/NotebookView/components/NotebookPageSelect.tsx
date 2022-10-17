@@ -1,7 +1,7 @@
 import { MouseEvent, useEffect, useMemo, useRef } from "react";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { IMaskInput } from "react-imask";
-import { ref, push, remove } from "firebase/database";
+import { ref, push } from "firebase/database";
 
 import { database } from "src/config/firebase/getDatabase";
 import { DefaultPagina } from 'src/config/DefaultEntitiesConfig';
@@ -36,9 +36,8 @@ type NextButtonInfoType = SetRequired<
     "icon" | "tooltipText"
 >;
 
-type HandleOnKeyPressCallbacksType = Map<
-    KeyboardEventKey, 
-    (event: KeyboardEvent) => void
+type HandleNumberPageOnKeyPressCallbacksMapType = HandleOnKeyPressCallbacksType<
+    HTMLInputElement
 >;
 
 type HandleButtonTypeCallbacksMapType = Map<
@@ -73,13 +72,13 @@ export function NotebookPageSelect({
         };
     }, [pageNumberSelected, notebookPagesMap.size]);
 
-    const handleOnKeyPressCallbacksMap = useMemo<HandleOnKeyPressCallbacksType>(() => {
+    const handleOnKeyPressCallbacksMap = useMemo<HandleNumberPageOnKeyPressCallbacksMapType>(() => {
         return new Map([
             ['Enter', handleNumberPageEnter]
         ]);
     }, [lastNotebookPageNumber]);
 
-    function handleNumberPageEnter(_: KeyboardEvent){
+    function handleNumberPageEnter(){
         if(!numberPageInputRef.current) return;
 
         numberPageInputRef.current.blur();
@@ -97,7 +96,7 @@ export function NotebookPageSelect({
         const newDefaultPage: PaginaModel = { 
             ...DefaultPagina,
             numero_pagina: lastNotebookPageNumber + 1,
-            text: " "
+            text: ""
         };
 
         await push<PaginaModel>(
@@ -116,14 +115,6 @@ export function NotebookPageSelect({
 
     async function handlePreviousButtonOnClick(event: MouseEvent<HTMLButtonElement>){
         if(pageNumberSelected === 1) return;
-
-        const currentPage = notebookPagesMap.get(pageNumberSelected)!;
-
-        if(currentPage.text?.length === 0){
-            await remove(
-                ref(database, refPagesPath + currentPage.id)
-            );
-        }
 
         setPageNumberSelected((pageSelected) => {
             return pageSelected - 1;

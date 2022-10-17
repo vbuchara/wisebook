@@ -4110,6 +4110,13 @@ imurmurhash@^0.1.4:
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
   integrity sha1-khi5srkoojixPcT7a21XbyMUU+o=
 
+indent-textarea@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/indent-textarea/-/indent-textarea-2.1.1.tgz#df41f67d1f12a1bb0d8b3bc2f181b9e45f3e66fb"
+  integrity sha512-WHVpwjTVShVdTP6Uu79lrhOZNYRo3PSPsMt3E9JIm4QzdgMyP/BcMtSZvE14rodZD6EYZb+nnxhsykkZRHazAQ==
+  dependencies:
+    text-field-edit "^3.1.0"
+
 inflight@^1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
@@ -5797,6 +5804,11 @@ text-decoding@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/text-decoding/-/text-decoding-1.0.0.tgz#38a5692d23b5c2b12942d6e245599cb58b1bc52f"
   integrity sha512-/0TJD42KDnVwKmDK6jj3xP7E2MG7SHAOG4tyTgyUCRPdHwvkquYNLEQltmdMa3owq3TkddCVcTsoctJI8VQNKA==
+
+text-field-edit@^3.1.0:
+  version "3.1.9001"
+  resolved "https://registry.yarnpkg.com/text-field-edit/-/text-field-edit-3.1.9001.tgz#479bbc6ed4c5a1dd721118daf9b13fd785cda257"
+  integrity sha512-5xSqH9HMiW4r/YDoz/DMX895elwenTCV/xwjGSmhVol62YFTHivbZi3T0jKm0Oyzj63RA2C0XAnWMQSC0SO/JA==
 
 text-table@^0.2.0:
   version "0.2.0"

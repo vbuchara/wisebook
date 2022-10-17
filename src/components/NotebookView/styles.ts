@@ -7,6 +7,14 @@ import { boxShadow } from '@styles/base/mixin';
 
 import PageModel from '@public/page-model.svg';
 
+export const NotebookPageControlContainer = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+
+    padding-block: 0.5rem;
+`;
+
 export type PageSelectedControlButtonProps = {
     type: "previous" | "next" | "add",
     disabled?: boolean
@@ -149,6 +157,7 @@ export const NotebookPageWrapper = styled.div`
 
             resize: none;
             overflow: hidden;
+            tab-size: 5;
 
             &:focus,
             &:focus-visible,
@@ -165,5 +174,12 @@ export const Container = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 0.75rem;
+
+    & > ${NotebookPageInfo.toString()} {
+        margin-top: 0.75rem;
+    }
+
+    & > ${NotebookPageControlContainer.toString()} {
+        align-self: stretch;
+    }
 `;

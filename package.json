@@ -26,6 +26,7 @@
     "firebase": "9.10.0",
     "firebase-admin": "^11.1.0",
     "firebase-functions": "^3.24.1",
+    "indent-textarea": "^2.1.1",
     "loadash": "^1.0.0",
     "lodash": "^4.17.21",
     "next": "12.1.0",

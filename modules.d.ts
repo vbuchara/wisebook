@@ -13,3 +13,9 @@ declare module "react-imask/extended" {
         maskRef: IMask.InputMask<Opts>;
     };
 }
+
+
+declare type HandleOnKeyPressCallbacksType<T extends Element> = Map<
+    KeyboardEventKey, 
+    (event: React.KeyboardEvent<T>| KeyboardEvent) => void
+>;
