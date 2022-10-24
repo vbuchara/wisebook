@@ -4,7 +4,7 @@ import { firebaseApp } from '../FirebaseConfig';
 
 const auth = getAuth(firebaseApp);
 
-if(process.env.NEXT_PUBLIC_USE_EMULATOR && typeof global.isAuthEmulatorConnected === "undefined"){
+if(JSON.parse(process.env.NEXT_PUBLIC_USE_EMULATOR) && typeof global.isAuthEmulatorConnected === "undefined"){
     connectAuthEmulator(auth, "http://127.0.0.1:9099", {
         disableWarnings: true
     });

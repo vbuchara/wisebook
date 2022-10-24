@@ -70,7 +70,7 @@ export function NotebookPageSelect({
             tooltipText: 'Próxima Página',
             icon: solid('chevron-right')
         };
-    }, [pageNumberSelected, notebookPagesMap.size]);
+    }, [pageNumberSelected, notebookPagesMap]);
 
     const handleOnKeyPressCallbacksMap = useMemo<HandleNumberPageOnKeyPressCallbacksMapType>(() => {
         return new Map([
