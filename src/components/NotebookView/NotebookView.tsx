@@ -51,7 +51,7 @@ export function NotebookViewComponent({
             setPageNumberSelected(lastNotebookPageNumber);
             notebookPage = notebookPagesMap.get(lastNotebookPageNumber)!;
         }
-
+        
         return notebookPage;
     }, [refPath, caderno.id, pageNumberSelected, notebookPagesMap]);
 

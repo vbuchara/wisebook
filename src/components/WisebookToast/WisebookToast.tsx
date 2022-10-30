@@ -8,7 +8,7 @@ import { WisebookToastContainer } from "./styles";
 import type { IconProps } from 'react-toastify';
 
 export function WisebookToast(){
-
+	
     function renderToastIcon({ type }: IconProps): React.ReactNode{
 		if(type == 'success'){
 			return <WisebookSuccessIcon 

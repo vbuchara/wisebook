@@ -152,6 +152,7 @@ export const Avatar = styled(AvatarComponent.Root)`
 export const AvatarImage = styled(AvatarComponent.Image)`
     width: 100%;
     height: 100%;
+    position: relative;
 `;
 
 export const AvatarFallback = styled(AvatarComponent.Fallback)`
@@ -159,6 +160,8 @@ export const AvatarFallback = styled(AvatarComponent.Fallback)`
     height: 100%;
 
     & > div {
+        position: relative;
+        
         img{
             border-radius: 100%;
         }

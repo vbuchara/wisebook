@@ -11,43 +11,63 @@ import { auth } from 'src/config/firebase/getAuth';
 import { LoginButton } from "components/LoginButton";
 import { Userlogged } from 'components/UserLogged';
 
-import { useTokenRefreshIntervalContext } from "src/hooks/useTokenRefreshIntervalContext";
+import { useTokenRefreshInterval } from "src/hooks/useTokenRefreshInterval";
 
 import { 
     HeaderStyle,  
     LogoImage
 } from "./styles";
 
+import type { Id } from 'react-toastify';
 import type { CookieSerializeOptions } from "next/dist/server/web/types";
 import type { CookiesType } from "@auth-types";
 
 export function Header(){
     const router = useRouter();
-    const [tokenRefreshInterval, setTokenRefreshInterval] = useTokenRefreshIntervalContext();
+    const { tokenRefreshInterval, setTokenRefreshInterval } = useTokenRefreshInterval();
 
     const [loading, setLoading] = useState(true);
 
     const [signInWithGoogle, authRes, loginLoading, errorRes] = useSignInWithGoogle(auth);
     const [user, authStateLoading] = useAuthState(auth);
 
-    useEffect(() => {
-        if(authStateLoading) return;
-        const cookies: CookiesType = parseCookies({});
-
-        if(!cookies.userToken && !user){
-            router.push('/');
-        }
-    }, [authStateLoading]);
-
     const setUserTokenId = useCallback(async() => {
         if(!user) return;
-
+        
         const tokenId = await user.getIdToken();
 
         setCookie({}, 'userToken', tokenId, {
             path: '/'
         } as CookieSerializeOptions);
     }, [user]);
+
+    function showSuccessToast(){
+        return new Promise<Id>((resolve) => {
+            const toastId = toast.success("Usuário Logado! Redirecionando...", {
+                autoClose: false,
+                onOpen: () => {
+                    resolve(toastId);
+                },
+            });
+        }); 
+    }
+
+    useEffect(() => {
+        if(authStateLoading) return;
+        
+        const cookies: CookiesType = parseCookies({});
+
+        if(!cookies.userToken && !user){
+            router.push('/');
+        }
+
+        if(cookies.userToken && !user){
+            destroyCookie({}, "userToken", {
+                path: '/'
+            });
+            router.push('/');
+        }
+    }, [authStateLoading]);
 
     /**
      * Refresh the token when component is rendered and 
@@ -94,27 +114,25 @@ export function Header(){
     }, [errorRes]);
 
     useEffect(() => {
-        if(authRes){
-            const toastId = toast.success("Usuário Logado! Redirecionando...", {
-                autoClose: false,
-            });
+        if(!authRes) return;
 
-            (async() => {
-                await setUserTokenId();
+        (async() => {
+            const toastId = await showSuccessToast();
 
-                router.push(
-                    `/cadernos`, 
-                );
+            await setUserTokenId();
 
-                toast.dismiss(toastId);
+            router.push(
+                `/cadernos`, 
+            );
 
-                const interval = window.setInterval(() => {
-                    setUserTokenId();
-                }, 29 * 60 * 1000);
+            toast.dismiss(toastId);
 
-                setTokenRefreshInterval(interval);
-            })();
-        }
+            const interval = window.setInterval(() => {
+                setUserTokenId();
+            }, 29 * 60 * 1000);
+
+            setTokenRefreshInterval(interval);
+        })();
     }, [authRes]);
 
     function handleLoginButton() {

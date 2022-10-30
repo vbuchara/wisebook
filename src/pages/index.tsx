@@ -16,7 +16,6 @@ import {
 
 import type { GetServerSideProps } from 'next';
 import type { CookiesType } from '@auth-types';
-import type { FirebaseError } from 'firebase/app';
 
 export type HomeProps = {
 	error?: string

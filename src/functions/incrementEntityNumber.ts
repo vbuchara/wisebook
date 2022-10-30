@@ -9,7 +9,10 @@ export function incrementEntityNumber<
         const lastNumbersRegex = /[0-9]+$/mg;
         const countNumber: string | undefined = lastNumbersRegex.exec(newEntity.nome)?.pop();
 
-        if(!countNumber) return newEntity;
+        if(!countNumber){
+            newEntity.nome = `${newEntity.nome} 1`;
+            return newEntity;
+        };
 
         newEntity.nome = newEntity.nome.replace(
             lastNumbersRegex, 

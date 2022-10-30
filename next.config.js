@@ -12,9 +12,6 @@ const nextConfig = {
       }
     ]
   },
-  future: {
-    webpack5: true,  
-  },
   webpack: (config, { isServer }) => {
     config.experiments = {
       topLevelAwait: true,

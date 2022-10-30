@@ -1,4 +1,5 @@
 import { forwardRef, useState } from 'react';
+import { remToPx } from 'polished';
 import Image from 'next/image';
 
 import UserAvatarImg from '@public/user-avatar.jpg';
@@ -26,15 +27,16 @@ export function UserAvatar({ user }: UserAvatarProps){
             <div className={className}>
                 <Image
                     src={user.photoURL || "https://lh3.googleusercontent.com"}
-                    layout="responsive"
-                    height="1rem"
-                    width="1rem"
+                    placeholder="blur"
+                    blurDataURL={UserAvatarImg.src}
                     alt={`Imagem do usuário ${user.displayName}`}
                     referrerPolicy="no-referrer" 
                     priority={true}
                     onError={() => {
                         setAvatarSrc(undefined);
                     }}
+                    sizes="30vw"
+                    fill
                 />
             </div>
         );
@@ -54,11 +56,12 @@ export function UserAvatar({ user }: UserAvatarProps){
                 <div>
                     <Image
                         src={UserAvatarImg}
-                        layout="responsive"
-                        height="1rem"
-                        width="1rem"
+                        alt={`Imagem Padrão de Usuário`}
+                        placeholder="blur"
+                        blurDataURL={UserAvatarImg.src}
                         priority={true}
-                        objectFit="cover"
+                        sizes="30vw"
+                        fill
                     />
                 </div>
             </AvatarFallback>

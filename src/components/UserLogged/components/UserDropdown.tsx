@@ -7,7 +7,7 @@ import * as Dropdown from '@radix-ui/react-dropdown-menu';
 
 import { auth } from 'config/firebase/getAuth';
 
-import { useTokenRefreshIntervalContext } from "src/hooks/useTokenRefreshIntervalContext";
+import { useTokenRefreshInterval } from "src/hooks/useTokenRefreshInterval";
 
 import LogoutIcon from '@public/logout-icon.svg';
 
@@ -41,7 +41,7 @@ export function UserDropdown({
     setDropdownOpen
 }: UserDropdownProps){
     const router = useRouter();
-    const [tokenRefreshInterval] = useTokenRefreshIntervalContext();
+    const { tokenRefreshInterval } = useTokenRefreshInterval();
 
     const [openDialog, setOpenDialog] = useState(false);
 

@@ -104,6 +104,7 @@ export default function Caderno({ userId, cadernos }: CadernoProps){
                                         id={id}
                                         caderno={caderno}
                                         isSelected={selectedCadernoKey === id}
+                                        cadernosMap={cadernosMap}
                                     />
                                 </li>
                             );
