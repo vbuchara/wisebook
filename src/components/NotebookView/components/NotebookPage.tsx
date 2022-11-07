@@ -159,6 +159,7 @@ export function NotebookPage({
                         pageLineHeightRef.current = info.rowHeight;
                     }}
                     onKeyDown={debouncedTextAreaOnKeyDown}
+                    tabIndex={-1}
                 />
             </div>
             <NotebookPageSvg />

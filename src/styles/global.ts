@@ -31,6 +31,10 @@ export const GlobalStyles = createGlobalStyle`
         overflow-x: hidden;
     }
 
+    button, input, textarea, a{
+        outline-color: ${colors.purple_800};
+    }
+
     button {
         cursor: pointer;
     }

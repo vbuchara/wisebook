@@ -1,28 +1,32 @@
 import type { CadernoModel, PaginaModel } from "@database-model";
+import { lastNumbersRegex, getLastNumber } from './getLastNumber';
 
 export function incrementEntityNumber<
     EntityType extends PaginaModel | CadernoModel
->(entity: EntityType): EntityType{
+>(entity: EntityType, startingBy?: number): EntityType{
     const newEntity = { ...entity };
 
     if('nome' in newEntity){
-        const lastNumbersRegex = /[0-9]+$/mg;
-        const countNumber: string | undefined = lastNumbersRegex.exec(newEntity.nome)?.pop();
+        const countNumber: number | undefined = getLastNumber(newEntity.nome);
 
         if(!countNumber){
-            newEntity.nome = `${newEntity.nome} 1`;
+            newEntity.nome = startingBy 
+                ? `${newEntity.nome} ${startingBy + 1}`
+                : `${newEntity.nome} 1`;
             return newEntity;
         };
 
         newEntity.nome = newEntity.nome.replace(
             lastNumbersRegex, 
-            `${Number(countNumber) + 1}`
+            `${startingBy ? startingBy + 1 : Number(countNumber) + 1}`
         );
     }
 
     if('numero_pagina' in newEntity){
-        newEntity.numero_pagina = newEntity.numero_pagina + 1;
+        newEntity.numero_pagina = startingBy
+            ? newEntity.numero_pagina + (startingBy + 1)
+            : newEntity.numero_pagina + 1;
     }
-
+    
     return newEntity;
 }

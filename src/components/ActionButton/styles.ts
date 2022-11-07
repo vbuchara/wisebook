@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import * as TooltipComponent from '@radix-ui/react-tooltip';
 
 import { colors } from '@styles/base/colors';
@@ -67,6 +67,10 @@ export const RoundedButton = styled.button.withConfig({
     padding: 0.5rem;
 
     transition: var(--parent-transition);
+
+    ${({ backgroundColor }) => !backgroundColor ? css`
+        outline-color: initial;
+    ` : ''}
 
     svg {
         height: var(--svg-size);

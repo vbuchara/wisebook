@@ -3,8 +3,6 @@ import { transparentize } from 'polished';
 
 import { colors } from './colors';
 
-import type { FlattenSimpleInterpolation } from 'styled-components';
-
 type BoxShadowMixinProps = {
     color?: string,
     transparentizeValue?: number,

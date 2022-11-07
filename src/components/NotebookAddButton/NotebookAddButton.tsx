@@ -12,6 +12,8 @@ import { auth, database } from 'src/config/firebase';
 import { DatabaseModelsEnum } from 'src/config/enums/DatabaseEnums';
 import { DefaultCaderno, DefaultPagina } from 'src/config/DefaultEntitiesConfig';
 
+import { findLastNotebook } from 'src/functions/findLastNotebook';
+import { getLastNumber } from 'src/functions/getLastNumber';
 import { incrementEntityNumber } from 'src/functions/incrementEntityNumber';
 
 import { AddButton } from "./styles";
@@ -52,18 +54,23 @@ export function NotebookAddButton({ onClick }: NotebookAddButtonProps){
             return;
         };
 
+        const cadernosArray: [string, CadernoModel][] = cadernosData 
+            ? Object.entries(cadernosData) 
+            : [];
 
-        const cadernoToCopy =  cadernosData ? {
+        const cadernoToCopy =  cadernosArray.length > 0 ? {
             ...DefaultCaderno,
-            nome: Object.entries(cadernosData).reverse()[0][1].nome
+            nome: findLastNotebook(cadernosArray)!.nome
         } : {
             ...DefaultCaderno
         };
+
         const newCaderno = incrementEntityNumber(cadernoToCopy);
 
         setCooldown(true);
         const cadernoRef = await push<CadernoModel>(ref(database, refCadernosPath), newCaderno);
-        push<PaginaModel>(
+        
+        await push<PaginaModel>(
             child(cadernoRef, DatabaseModelsEnum.PAGINAS),
             DefaultPagina
         );

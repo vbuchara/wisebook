@@ -45,7 +45,7 @@ export default function Caderno({ userId, cadernos }: CadernoProps){
 
         const cadernoNome = router.query.name?.[0];
 
-        let selectedCadernoKey = Array.from(cadernosMap)
+        const selectedCadernoKey = Array.from(cadernosMap)
             .find(([key, caderno]) => {
                 const nome = caderno.nome.replaceAll(" ", "")
                     .toLowerCase();
@@ -53,7 +53,7 @@ export default function Caderno({ userId, cadernos }: CadernoProps){
                 if(nome === cadernoNome){
                     return [key, caderno];
                 }
-            })?.[0] || Object.keys(cadernos)[0];
+            })?.[0] || Array.from(cadernosMap.keys())[0];
 
         return selectedCadernoKey;
     }, [router.query]);
