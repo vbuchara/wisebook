@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ref, push, child } from 'firebase/database';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useObjectVal } from 'react-firebase-hooks/database';
@@ -103,7 +103,7 @@ export function NotebookAddButton({ onClick }: NotebookAddButtonProps){
                     />
                 ) : (
                     <FontAwesomeIcon
-                        icon={solid('plus')}
+                        icon={faPlus}
                     />
                 )
             }

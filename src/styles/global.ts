@@ -29,6 +29,7 @@ export const GlobalStyles = createGlobalStyle`
         }
 
         overflow-x: hidden;
+        overflow-y: auto;
     }
 
     button, input, textarea, a{

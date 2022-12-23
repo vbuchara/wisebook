@@ -22,7 +22,7 @@ declare module "@database-model" {
         paginas?: {
             [key: string]: PaginaModel,
         },
-        configuracoes: ConfiguracoesModel,
+        configuracoes?: ConfiguracoesModel,
         ativo: boolean
     }
 
@@ -54,6 +54,9 @@ declare module "@database-model" {
         id: string
     }
 
-    export type UpdateBatch<Model extends WisebookModel = WisebookModel> = 
-        Record<string, Model>;
+    export type UpdateBatch<
+        Model extends WisebookModel | string | number | boolean,
+        Keys extends string = string
+    > = 
+        Record<Keys, Model>;
 }

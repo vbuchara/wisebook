@@ -19,6 +19,8 @@ import NotebookModelSvg from '@public/notebook-model.svg';
 
 import { fontSizes } from '@styles/base/fonts';
 
+import { NotebookConfigButtonTrigger } from '../NotebookConfigModal';
+
 import {
     ActionButtonsDiv,
     Container,
@@ -27,7 +29,7 @@ import {
 } from './styles';
 
 import type { CadernoModel, UpdateBatch } from "@database-model";
-import type { MouseEvent, KeyboardEvent, RefAttributes } from 'react';
+import type { MouseEvent, KeyboardEvent } from 'react';
 
 type NotebookProps = {
     id: string
@@ -75,11 +77,11 @@ export function Notebook({
             return { ...DefaultCaderno }.nome;
 
         const previousCaderno = cadernosArray[selectedCadernoIndex + 1][1];
-
+        
         return incrementEntityNumber(previousCaderno).nome;
     }, [cadernosMap, id]);
     
-    function handleNotebookOnClick(event: MouseEvent<HTMLButtonElement>){
+    function handleNotebookOnClick(event: MouseEvent<HTMLAnchorElement>){
         if(isSelected) event.preventDefault();
     }
 
@@ -97,12 +99,12 @@ export function Notebook({
 
         cadernoNameRef.current.blur();
     }
-
+    
     function handleNotebookNameBlur(){
         if(!cadernoNameRef.current) return;
         
         const value = cadernoNameRef.current.value;
-
+        
         const isNotUnique = Array.from(cadernosMap.entries())
             .some(([thisId, thisCaderno]) => {
                 const name: string = thisCaderno.nome.replaceAll(" ", "").toLowerCase();
@@ -116,19 +118,21 @@ export function Notebook({
                 autoClose: 4 * 1000
             });
             cadernoNameRef.current.value = caderno.nome;
+            setNotebookNameValue(caderno.nome);
 
             return;
         }
-
+        
         debouncedHandleNotebookNameChange(value || thisDefaultCadernoName);
     }
-
+    
     async function handleNotebookNameChange(newName: string){
         if(!cadernoNameRef.current) return;   
         const formattedNewName = newName.replaceAll(" ", "").toLowerCase();
         
-        const updateChanges: UpdateBatch<CadernoModel> = {};
-        updateChanges[refCadernoPath] = { ...caderno, nome: newName };
+        const updateChanges: UpdateBatch<string> = {};
+        
+        updateChanges[`${refCadernoPath}/nome`] = newName;
 
         await update(
             ref(database),
@@ -136,10 +140,9 @@ export function Notebook({
         );
 
         if(!isSelected) return;
-
         router.push(`/cadernos/${formattedNewName}`);
     }
-
+    
     const FowardNotebookName = useMemo(() => { 
         return forwardRef<HTMLInputElement, React.HTMLProps<HTMLInputElement>>((props, ref) => {
             const { ref: propsRef, as, ...inputProps } = props;
@@ -193,9 +196,12 @@ export function Notebook({
                     name={caderno.nome}
                     isSelected={Boolean(isSelected)}
                 />
-                <ActionButton
-                    icon={solid('gear')}
-                    tooltipText="Configurar Caderno"
+                <NotebookConfigButtonTrigger
+                    caderno={{
+                        id,
+                        ...caderno
+                    }}
+                    type="Caderno"
                 />
             </ActionButtonsDiv>
         </Container>

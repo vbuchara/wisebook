@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { forwardRef, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as TooltipComponent from "@radix-ui/react-tooltip";
 
@@ -10,6 +10,7 @@ import {
 
 import type { MouseEventHandler } from 'react';
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
+import type { RoundedButtonProps } from './styles';
 
 type ActionButtonProps = {
     icon: IconProp,
@@ -19,19 +20,37 @@ type ActionButtonProps = {
     tooltipTextColor?: string,
     onClick?: MouseEventHandler,
     className?: string
-};
+} & React.HTMLAttributes<HTMLButtonElement>;
 
-export function ActionButton({
+export function ActionButtonComponent({
     icon,
     iconColor,
     backgroundColor,
     tooltipText,
     tooltipTextColor,
     onClick,
-    className
-}: ActionButtonProps){
-    const roundedButtonRef = useRef<HTMLButtonElement>(null);
+    className,
+    ...props
+}: ActionButtonProps, ref: React.Ref<HTMLButtonElement>){
     const [open, setOpen] = useState(false);
+
+    const TriggerButton = useMemo(() => {
+        return forwardRef<
+            HTMLButtonElement, 
+            React.HTMLAttributes<HTMLButtonElement> & RoundedButtonProps
+        >((props, ref) => {
+            return (
+                <RoundedButton
+                    {...props}
+                    ref={ref}
+                >
+                    <FontAwesomeIcon
+                        icon={icon}
+                    />
+                </RoundedButton>
+            );
+        });
+    }, [icon]);
 
     return (
         <TooltipComponent.Provider>
@@ -43,17 +62,14 @@ export function ActionButton({
                 <TooltipComponent.Trigger
                     asChild
                 >
-                    <RoundedButton
-                        ref={roundedButtonRef}
+                    <TriggerButton
+                        {...props}
+                        ref={ref}
                         className={className}
                         iconColor={iconColor}
                         backgroundColor={backgroundColor}
                         onClick={onClick}
-                    >
-                        <FontAwesomeIcon
-                            icon={icon}
-                        />
-                    </RoundedButton>
+                    />
                 </TooltipComponent.Trigger>
                 <TooltipComponent.Portal>
                     <TooltipContent
@@ -67,3 +83,6 @@ export function ActionButton({
         </TooltipComponent.Provider>
     );
 }
+
+export const ActionButton = 
+    forwardRef<HTMLButtonElement, ActionButtonProps>(ActionButtonComponent);

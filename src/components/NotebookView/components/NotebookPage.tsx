@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { update, ref } from '@firebase/database';
-import TextAreaAutoResize from 'react-textarea-autosize';
 import debounce from 'lodash/debounce';
 import * as indent from 'indent-textarea';
 
 import { database } from 'src/config/firebase/getDatabase';
+import { DefaultConfiguracoes } from 'src/config/DefaultEntitiesConfig';
 
-import { NotebookPageSvg, NotebookPageWrapper } from "../styles";
+import { 
+    NotebookPageSvg, 
+    NotebookPageWrapper,
+    NotebookPageTextArea
+} from "../styles";
 
 import type { CadernoModel, PaginaModel, UpdateBatch, WithId } from '@database-model';
 
@@ -75,12 +79,9 @@ export function NotebookPage({
     }
 
     function handleUpdatePageText(pageTextValue: string){
-        const pageSelected = page;
-        pageSelected.text = pageTextValue;
-
-        const { id: _, ...pageToUpdate } = pageSelected;
-        const updateChanges = {} as UpdateBatch<PaginaModel>;
-        updateChanges[refPagePath] = pageToUpdate;
+        const updateChanges = {
+            [`${refPagePath}/text`]: pageTextValue
+        } satisfies UpdateBatch<string>;
         
         update(
             ref(database),
@@ -111,6 +112,14 @@ export function NotebookPage({
         }
     ), [handleTextareaOnKeyPressCallbacksMap]);
 
+    const config = useMemo(() => {
+        return {
+            ...DefaultConfiguracoes,
+            ...caderno.configuracoes,
+            ...page.configuracoes
+        };
+    }, [caderno.id, page.id, caderno.configuracoes, page.configuracoes]);
+    
     useEffect(() => {
         oldPageTextRef.current = undefined;
         setPageText(page.text || "");
@@ -145,11 +154,11 @@ export function NotebookPage({
         <NotebookPageWrapper>
             <div 
                 className="page-textarea-wrapper"
-                onClick={(event) => {
+                onClick={() => {
                     pageTextTextareaRef.current?.focus();
                 }}
             >
-                <TextAreaAutoResize
+                <NotebookPageTextArea
                     ref={pageTextTextareaRef}
                     onChange={debouncedTextAreaOnChange}
                     value={pageText}
@@ -160,9 +169,13 @@ export function NotebookPage({
                     }}
                     onKeyDown={debouncedTextAreaOnKeyDown}
                     tabIndex={-1}
+                    textColor={config.cor_texto}
                 />
             </div>
-            <NotebookPageSvg />
+            <NotebookPageSvg
+                pageColor={config.cor_background}
+                linesColor={config.cor_linhas}
+            />
         </NotebookPageWrapper>
     );
 }

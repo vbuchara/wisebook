@@ -15,6 +15,7 @@ import {
 } from '@styles/index';
 
 import type { GetServerSideProps } from 'next';
+import type { Id } from 'react-toastify';
 import type { CookiesType } from '@auth-types';
 
 export type HomeProps = {
@@ -31,6 +32,7 @@ export default function Home({ error }: HomeProps){
 		
 		if(wisebookError.toast){
 			toast.error(wisebookError.toast.message, {
+				toastId: wisebookError.toast.message,
 				autoClose: wisebookError.toast.duration,
 			});
 		}

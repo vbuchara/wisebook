@@ -1,14 +1,11 @@
-import { forwardRef } from 'react';
 import * as AlertDialogComponent from '@radix-ui/react-alert-dialog';
 
 import {
     AlertDialogTitle,
-    AlertDialogContent,
-    AlertDialogPortal,
-    AlertDialogOverlay,
-    AlertDialogTrigger,
     AlertDialogCancel,
-    AlertDialogAction
+    AlertDialogAction,
+    DialogButtonsDiv,
+    WisebookDialogModal
 } from './styles';
 
 import { MouseEventHandler } from 'react';
@@ -32,53 +29,39 @@ export function WisebookDialog({
     className, open, onOpenChange
  }: WisebookDialogBaseProps){
     return (
-        <AlertDialogComponent.Root
+        <WisebookDialogModal
+            trigger={trigger}
+            className={className}
             open={open}
             onOpenChange={onOpenChange}
         >
-            <AlertDialogTrigger asChild>
-                {trigger}
-            </AlertDialogTrigger>
-            <AlertDialogPortal>
-                <AlertDialogOverlay
-                    onClick={() => {
-                        (onOpenChange && onOpenChange(false));
-                    }}
-                />
-                <AlertDialogContent
-                    className={className}
+            <AlertDialogTitle
+                asChild={typeof title !== 'string'}
+            >
+                {title}
+            </AlertDialogTitle>
+            {description && (
+                <AlertDialogComponent.Description
+                    asChild={typeof description !== 'string'}
                 >
-                    <AlertDialogTitle
-                        asChild={typeof title !== 'string'}
-                    >
-                        {title}
-                    </AlertDialogTitle>
-                    {description && (
-                        <AlertDialogComponent.Description
-                            asChild={typeof description !== 'string'}
-                        >
-                            {description}
-                        </AlertDialogComponent.Description>
-                    )}
-                    <div
-                        className="buttons-div"
-                    >
-                        <AlertDialogCancel
-                            asChild={typeof cancel !== 'string'}
-                            onClick={onCancelClick}
-                        >
-                            {cancel}
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                            asChild={typeof action !== 'string'}
-                            onClick={onActionClick}
-                        >
-                            {action}
-                        </AlertDialogAction>
-                    </div>
-                </AlertDialogContent>
-            </AlertDialogPortal>
-        </AlertDialogComponent.Root>
+                    {description}
+                </AlertDialogComponent.Description>
+            )}
+            <DialogButtonsDiv>
+                <AlertDialogCancel
+                    asChild={typeof cancel !== 'string'}
+                    onClick={onCancelClick}
+                >
+                    {cancel}
+                </AlertDialogCancel>
+                <AlertDialogAction
+                    asChild={typeof action !== 'string'}
+                    onClick={onActionClick}
+                >
+                    {action}
+                </AlertDialogAction>
+            </DialogButtonsDiv>
+        </WisebookDialogModal>
     );
 }
 

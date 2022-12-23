@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { brands } from '@fortawesome/fontawesome-svg-core/import.macro';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 import { FontAweIcon, LoginButtonStyle } from './styles';
 import { LoadingComponent } from 'components/LoadingComponent';
@@ -20,7 +20,7 @@ export function LoginButton({ handleLoginButton, loading }: LoginButtonProps) {
                 className='loading-spinner'
             />
             <FontAweIcon      
-                icon={brands('google')}
+                icon={faGoogle}
                 className='google-logo'
             />
             <h1>Login <span>com Google</span></h1>

@@ -46,7 +46,11 @@ export default class MyDocument extends Document {
                     <link rel="apple-touch-icon" sizes="114x114" href="/favicon114x114.png" />
                     <link rel="apple-touch-icon" sizes="152x152" href="/favicon152x152.png" />
                 </Head>
-                <body>
+                <body
+                    style={{
+                        overflow: 'unset !important'
+                    }}
+                >
                     <Main />
                     <NextScript />
                 </body>

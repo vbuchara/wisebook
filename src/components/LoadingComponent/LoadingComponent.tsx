@@ -1,5 +1,5 @@
 import React from 'react';
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAweIcon, IconWrapper } from './styles';
 
@@ -15,17 +15,17 @@ export function LoadingComponent({ animating, className, ...props }: LoadingComp
             className={className}
         >
             <FontAweIcon
-                icon={solid('circle')}                        
+                icon={faCircle}                        
                 spin={animating}
                 {...props}
             />
             <FontAweIcon
-                icon={solid('circle')}                        
+                icon={faCircle}                        
                 spin={animating}
                 {...props}
             />
             <FontAweIcon
-                icon={solid('circle')}                        
+                icon={faCircle}                        
                 spin={animating}
                 {...props}
             />

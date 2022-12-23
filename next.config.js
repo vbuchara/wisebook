@@ -12,11 +12,12 @@ const nextConfig = {
       }
     ]
   },
-  webpack: (config, { isServer }) => {
-    config.experiments = {
-      topLevelAwait: true,
-      layers: true,
-    };
+  compiler: {
+    styledComponents: {
+      ssr: true
+    }
+  },
+  webpack: (config) => {
 
     config.module.rules.push({
       test: /\.svg$/,
@@ -24,7 +25,7 @@ const nextConfig = {
     });
 
     return config; 
-  }
+  },
 }
 
 module.exports = nextConfig;

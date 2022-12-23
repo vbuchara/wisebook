@@ -25,7 +25,7 @@ export function NotebookViewComponent({
 
     const notebookPagesMap = useMemo<Map<number, WithId<PaginaModel>>>(() => {
         if(!caderno.paginas) return new Map();
-        
+
         const formattedPages = Object.entries(caderno.paginas)
             .map<[number, WithId<PaginaModel>]>(
                 ([key, pagina]) => [pagina.numero_pagina, { id: key, ...pagina }]
@@ -34,8 +34,7 @@ export function NotebookViewComponent({
         return new Map(formattedPages);
     }, [
         caderno.id,
-        Object.values(caderno.paginas || {}).pop()?.numero_pagina, 
-        Object.keys(caderno.paginas || {}).length
+        caderno.paginas
     ]);
     
     const lastNotebookPageNumber = useMemo<number>(() => {
@@ -54,7 +53,7 @@ export function NotebookViewComponent({
         
         return notebookPage;
     }, [refPath, caderno.id, pageNumberSelected, notebookPagesMap]);
-    console.log(notebookPagesMap);
+    
     const refPagePath = useMemo(() => {
         const pageKey = notebookPageSelected.id;
 
@@ -69,6 +68,8 @@ export function NotebookViewComponent({
                 notebookPagesQuantity={notebookPagesMap.size}
                 pageNumberSelected={pageNumberSelected}
                 setPageNumberSelected={setPageNumberSelected}
+                caderno={caderno}
+                pageSelected={notebookPageSelected}
             />
             <NotebookPage
                 caderno={caderno}
@@ -77,6 +78,7 @@ export function NotebookViewComponent({
                 refPagePath={refPagePath}
             />
             <NotebookPageSelect
+                caderno={caderno}
                 pageNumberSelected={pageNumberSelected}
                 setPageNumberSelected={setPageNumberSelected}
                 notebookPagesMap={notebookPagesMap}

@@ -11,6 +11,7 @@ type WisebookTooltipProps = {
     delay?: number,
     tooltipTextColor?: string,
     tooltipBackgroundColor?: string,
+    className?: string
 }
 
 export function WisebookTooltip({
@@ -19,6 +20,7 @@ export function WisebookTooltip({
     delay,
     tooltipTextColor,
     tooltipBackgroundColor,
+    className,
     ...props
 }: WisebookTooltipProps){
     const [open, setOpen] = useState(false);
@@ -49,6 +51,7 @@ export function WisebookTooltip({
                     <TooltipContent
                         color={tooltipTextColor}
                         backgroundColor={tooltipBackgroundColor}
+                        className={className}
                     >
                         <h1>{tooltipText}</h1>
                         <TooltipArrow/>

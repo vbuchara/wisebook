@@ -1,5 +1,5 @@
 import { MouseEvent, useEffect, useMemo, useRef } from "react";
-import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { faChevronLeft, faPlus, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { IMaskInput } from "react-imask";
 import { ref, push } from "firebase/database";
 
@@ -18,9 +18,8 @@ import type { ActionButton } from '../../ActionButton';
 
 import type { Dispatch, ComponentPropsWithRef, SetStateAction } from 'react';
 import type { InputMaskRef } from "react-imask/extended";
-import type { PaginaModel, WithId } from "@database-model";
+import type { CadernoModel, PaginaModel, WithId } from "@database-model";
 import type { SetRequired } from 'type-fest';
-import type { KeyboardEventKey } from 'keyboard-event-key-type'; 
 
 type NotebookPageSelectProps = {
     pageNumberSelected: number,
@@ -28,6 +27,7 @@ type NotebookPageSelectProps = {
     notebookPagesMap: Map<number, WithId<PaginaModel>>,
     lastNotebookPageNumber: number,
     refPagesPath: string,
+    caderno: WithId<CadernoModel>
 };
 
 type NextButtonInfoType = SetRequired<
@@ -46,6 +46,7 @@ type HandleButtonTypeCallbacksMapType = Map<
 >;
 
 export function NotebookPageSelect({
+    caderno,
     pageNumberSelected,
     setPageNumberSelected,
     notebookPagesMap,
@@ -53,7 +54,7 @@ export function NotebookPageSelect({
     refPagesPath
 }: NotebookPageSelectProps) {
     const numberPageMaskRef = useRef<InputMaskRef>(null);
-    const numberPageInputRef = useRef<HTMLInputElement>(null);
+    const numberPageInputRef = useRef<HTMLInputElement | null>(null);
 
     const nextButtonInfo = useMemo<NextButtonInfoType>(() => {
         if(pageNumberSelected === notebookPagesMap.size){
@@ -61,14 +62,14 @@ export function NotebookPageSelect({
                 type: "add",
                 tooltipText:'Adicionar Página',
                 tooltipTextColor: colors.blue_info,
-                icon: solid('plus'),
+                icon: faPlus,
             };
         }
 
         return {
             type: "next",
             tooltipText: 'Próxima Página',
-            icon: solid('chevron-right')
+            icon: faChevronRight
         };
     }, [pageNumberSelected, notebookPagesMap]);
 
@@ -96,7 +97,11 @@ export function NotebookPageSelect({
         const newDefaultPage: PaginaModel = { 
             ...DefaultPagina,
             numero_pagina: lastNotebookPageNumber + 1,
-            text: ""
+            text: "",
+            configuracoes: {
+                ...DefaultPagina.configuracoes,
+                ...caderno.configuracoes
+            }
         };
 
         await push<PaginaModel>(
@@ -148,7 +153,7 @@ export function NotebookPageSelect({
             <PageSelectedControlButton
                 type="previous"
                 tooltipText='Página Anterior'
-                icon={solid('chevron-left')}
+                icon={faChevronLeft}
                 onClick={handleButtonTypeCallbacksMap.get("previous")}
                 disabled={pageNumberSelected === 1}
             />
@@ -156,7 +161,9 @@ export function NotebookPageSelect({
                 mask={/^(?:[1-9][0-9]{0,2}$)(?:\.[0-9]{1,2}$)?/}
                 ref={numberPageMaskRef}
                 value={String(pageNumberSelected)}
-                inputRef={numberPageInputRef}
+                inputRef={(element) => {
+                    numberPageInputRef.current = element as HTMLInputElement;
+                }}
                 placeholderChar=" "
             />
             <PageSelectedControlButton

@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
-import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ref, remove } from "@firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
@@ -63,7 +63,7 @@ export function NotebookDeleteButton({
         return (
             <ActionButton
                 {...props}
-                icon={solid('trash')}
+                icon={faTrash}
                 iconColor={colors.white}
                 backgroundColor={colors.red_error}
                 tooltipText="Deletar Caderno"

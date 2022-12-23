@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import TextAreaAutoResize from 'react-textarea-autosize';
 
 import { ActionButton } from '../ActionButton';
 
@@ -101,6 +102,36 @@ export const NotebookPageInfo = styled.div`
     }
 `;
 
+type NotebookPageTextAreaProps = {
+    textColor: string
+};
+
+export const NotebookPageTextArea = styled(TextAreaAutoResize).withConfig({
+    shouldForwardProp: (prop) => !['textColor'].includes(prop)
+})<NotebookPageTextAreaProps>`
+    --color: ${({ textColor }) => textColor ? textColor : colors.purple_800}; 
+
+    height: auto;
+
+    font-size: inherit;
+    line-height: 1;
+
+    background-color: transparent;
+    color: var(--color);
+    caret-color: var(--color);
+
+    resize: none;
+    overflow: hidden;
+    tab-size: 5;
+
+    &:focus,
+    &:focus-visible,
+    &:focus-within 
+    {
+        outline: none;
+    }
+`;
+
 export const NotebookPageWrapper = styled.div`
     --scale-ratio: 0.8;
 
@@ -145,26 +176,8 @@ export const NotebookPageWrapper = styled.div`
             outline: none;
         }
 
-        textarea {
-            height: auto;
-
+        ${NotebookPageTextArea.toString()} {
             font-size: calc(20px * var(--scale-ratio));
-            line-height: 1;
-
-            background-color: transparent;
-            color: ${colors.purple_800};
-            caret-color: ${colors.purple_800};
-
-            resize: none;
-            overflow: hidden;
-            tab-size: 5;
-
-            &:focus,
-            &:focus-visible,
-            &:focus-within 
-            {
-                outline: none;
-            }
         }
     }
 `;

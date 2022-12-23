@@ -14,6 +14,15 @@ declare module "react-imask/extended" {
     };
 }
 
+declare module "@radix-ui"{
+    export type PointerDownOutsideEvent = CustomEvent<{
+        originalEvent: PointerEvent;
+    }>;
+    export type FocusOutsideEvent = CustomEvent<{
+        originalEvent: FocusEvent;
+    }>;
+}
+
 
 declare type HandleOnKeyPressCallbacksType<T extends Element> = Map<
     KeyboardEventKey, 

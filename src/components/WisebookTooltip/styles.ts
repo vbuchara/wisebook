@@ -15,9 +15,10 @@ export const TooltipContent = styled(TooltipComponent.Content).withConfig({
 })<TooltipContentProps>`
     --background-color: ${({ backgroundColor }) => backgroundColor || colors.white};
     --color: ${({ color }) => color || colors.purple_800};
+    --padding: 0.5rem;
 
     border-radius: 4px;
-    padding: 0.5rem;
+    padding: var(--padding);
     line-height: 1;
     background-color: var(--background-color);
     color: var(--color);

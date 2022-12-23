@@ -32,7 +32,7 @@ export const TooltipArrow = styled(TooltipComponent.Arrow)`
     fill: ${colors.white};
 `;
 
-type RoundedButtonProps = {
+export type RoundedButtonProps = {
     iconColor?: string,
     backgroundColor?: string,
 };

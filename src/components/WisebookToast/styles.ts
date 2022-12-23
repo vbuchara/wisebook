@@ -6,7 +6,8 @@ import { colors } from '@styles/base/colors';
 
 export const WisebookToastContainer = styled(ToastContainer)`
     &&&.Toastify__toast-container {
-
+        z-index: 12;
+        pointer-events: all;
     }
 
     .Toastify__toast {

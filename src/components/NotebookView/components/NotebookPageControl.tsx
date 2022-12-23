@@ -1,11 +1,12 @@
 import { forwardRef, useMemo, useState } from "react";
-import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { toast } from "react-toastify";
 import { ref, remove } from "@firebase/database";
 
 import { database } from 'src/config/firebase';
 
-import { ActionButton } from "src/components/ActionButton";
+import { ActionButton } from 'src/components/ActionButton';
+import { NotebookConfigButtonTrigger } from "src/components/NotebookConfigModal";
 import { DeleteNotebookDialog } from "src/components/NotebookDeleteButton/styles";
 
 import { colors } from "@styles/base/colors";
@@ -15,19 +16,24 @@ import {
 } from "../styles";
 
 import type { Dispatch, SetStateAction } from 'react';
+import type { CadernoModel, PaginaModel, WithId } from "@database-model";
 
 type NotebookPageControlProps = {
     refPagePath: string,
     notebookPagesQuantity: number,
     pageNumberSelected: number,
     setPageNumberSelected: Dispatch<SetStateAction<number>>,
+    caderno: WithId<CadernoModel>,
+    pageSelected: WithId<PaginaModel>
 };
 
 export function NotebookPageControl({
     refPagePath,
     notebookPagesQuantity,
     pageNumberSelected,
-    setPageNumberSelected
+    setPageNumberSelected,
+    caderno,
+    pageSelected
 }: NotebookPageControlProps){
 
     const [open, setOpen] = useState(false);
@@ -53,7 +59,7 @@ export function NotebookPageControl({
         return (
             <ActionButton
                 {...props}
-                icon={solid('trash')}
+                icon={faTrash}
                 iconColor={colors.white}
                 backgroundColor={colors.red_error}
                 tooltipText="Deletar Página"
@@ -73,9 +79,10 @@ export function NotebookPageControl({
                 action="Sim"
                 onActionClick={handlePageDelete}
             />
-            <ActionButton
-                icon={solid('gear')}
-                tooltipText="Configurar Página"
+            <NotebookConfigButtonTrigger
+                caderno={caderno}
+                type="Página"
+                pagina={pageSelected}
             />
         </NotebookPageControlContainer>
     );
