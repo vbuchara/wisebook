@@ -48,7 +48,7 @@ export default function Home({ error }: HomeProps){
 
 			<MainPage>
 				<section>
-					<Title>Wisebook Welcoming Text</Title>
+					<Title>Bem Vindo ao Wisebook!</Title>
 				</section>
 			</MainPage>
 		</>
