@@ -19,8 +19,8 @@ import {
 } from "./styles";
 
 import type { Id } from 'react-toastify';
-import type { CookieSerializeOptions } from "next/dist/server/web/types";
 import type { CookiesType } from "@auth-types";
+import type { CookieSerializeOptions } from "next/dist/server/web/spec-extension/cookies/types";
 
 export function Header(){
     const router = useRouter();

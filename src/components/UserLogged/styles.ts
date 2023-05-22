@@ -4,8 +4,7 @@ import * as AvatarComponent from '@radix-ui/react-avatar';
 import * as DropdownComponent from '@radix-ui/react-dropdown-menu';
 
 import { 
-    WisebookDialog,
-    AlertDialogContent
+    WisebookDialog
 } from 'components/WisebookDialog';
 
 import { colors } from '@styles/base/colors';
