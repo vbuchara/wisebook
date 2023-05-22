@@ -9,7 +9,8 @@ declare global {
             NEXT_PUBLIC_MESSAGING_SENDER_ID:string,
             NEXT_PUBLIC_APP_ID:string,
             NEXT_PUBLIC_BASE_URL: string,
-            NEXT_PUBLIC_USE_EMULATOR: string
+            NEXT_PUBLIC_USE_EMULATOR: string,
+            FIREBASE_SERVICE_ACCOUNT_KEY: string
         }
     }
 
