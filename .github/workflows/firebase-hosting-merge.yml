@@ -10,9 +10,22 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: npm ci && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+
+      - name: Install Yarn
+        run: curl -o- -L https://yarnpkg.com/install.sh | bash
+
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Run Yarn Install and Build
+        run: rm -rf node_modules && yarn install --frozen-lockfile && yarn build
+
+      - name: Firebase Deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_WISEBOOK_1B2C0 }}'
