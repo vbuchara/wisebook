@@ -1,4 +1,4 @@
-# 📕 Wisebook Project 🛠
+# 📕 Wisebook Project
 
 A digital note-taking app I have created as my final project for one of my graduation courses in Higher Education. 
 
